@@ -1,28 +1,25 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { Home } from "../pages/Home";
 import Login from "../pages/Login";
-import { Header } from "../components/Header"; // Certifique-se que está importando corretamente
+import { Header } from "../components/Header";
+import { DREPage } from "../pages/DREPage"; 
 
 export const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        {/* Redireciona para o login quando acessar a rota raiz ("/") */}
         <Route path="/" element={<Navigate to="/login" />} />
-
-        {/* Definição da rota /home com Header */}
         <Route
           path="/home"
           element={
             <>
-              <Header /> {/* O Header é exibido apenas na Home */}
+              <Header />
               <Home />
             </>
           }
         />
-
-        {/* Rota de login */}
         <Route path="/login" element={<Login />} />
+        <Route path="/dre" element={<DREPage />} /> 
       </Routes>
     </Router>
   );
