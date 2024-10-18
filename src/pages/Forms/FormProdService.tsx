@@ -1,14 +1,15 @@
-import {Box, VStack, HStack, Icon, Text, Heading} from "@chakra-ui/react";
-import {FaStore, FaUserTie, FaIndustry, FaBoxOpen, FaCloud, FaTools, FaChevronRight, FaArrowLeft} from "react-icons/fa";
+import { Box, VStack, HStack, Icon, Text, Heading } from "@chakra-ui/react";
+import { FaChevronRight, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+import { MdMiscellaneousServices } from "react-icons/md";
+import {IoBagHandleOutline} from "react-icons/io5";
+
+
 const menuItems = [
-    { label: "Comércio", icon: FaStore, path: "/commerce" },
-    { label: "Consultor", icon: FaUserTie, path: "/consultant" },
-    { label: "Indústria", icon: FaIndustry, path: "/industry" },
-    { label: "Produtor", icon: FaBoxOpen, path: "/producer" },
-    { label: "Saas", icon: FaCloud, path: "/saas" },
-    { label: "Serviço", icon: FaTools, path: "/service" },
+    { label: "Um produto", icon: IoBagHandleOutline, path: "/productCad" },
+    { label: "Um serviço", icon: MdMiscellaneousServices, path: "/serviceCad" },
+
 ];
 
 const MenuPage = () => {
@@ -17,26 +18,34 @@ const MenuPage = () => {
     const handleNavigation = (path: string) => {
         navigate(path);
     };
-
     return (
         <Box
             minHeight="100vh"
             display="flex"
             justifyContent="center"
-            alignItems="center"
+            alignItems={{ base: "flex-start", md: "center" }} // Alinhado no centro no desktop e mais em cima no mobile
             bg="white"
             p={4}
+            position="relative" // Para permitir o posicionamento absoluto da seta
         >
-            <Box width={{ base: "90%", md: "450px" }}>
-                {/* Seta para voltar com o nome ao lado */}
-                <HStack mb={4} onClick={() => navigate("/")} cursor="pointer">
+            {/* Seta para voltar com o nome ao lado */}
+            {/* Precisa ajustar o navigate para voltar para o ultimo step da pagina de form */}
+            <Box
+                position="absolute"
+                top={{ base: "5%", md: "10%" }}
+                left={{ base: "5%", md: "10%" }}
+                cursor="pointer"
+                onClick={() => navigate("/cost")}
+            >
+                <HStack spacing={2}>
                     <Icon as={FaArrowLeft} color="black" boxSize="20px" />
                     <Text fontSize="lg" color="black" fontWeight="medium">
                         Formulário inicial
                     </Text>
                 </HStack>
+            </Box>
 
-
+            <Box width={{ base: "90%", md: "450px" }} mt={{ base: "20%", md: "0" }}>
                 <Heading as="h2" size="lg" textAlign="center" color="black" mb={6}>
                     Qual é o seu modelo de negócio:
                 </Heading>
