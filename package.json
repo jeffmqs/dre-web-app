@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.10.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "axios": "^1.7.7",
+    "dre-app": "file:",
     "framer": "^2.4.1",
     "motion": "^10.18.0",
     "react": "^18.3.1",
