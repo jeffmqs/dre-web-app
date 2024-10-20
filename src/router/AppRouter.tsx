@@ -8,6 +8,7 @@ import DynamicFormPage from "../pages/Forms/DynamicFormPage.tsx";
 import FormProdService from "../pages/Forms/FormProdService.tsx";
 import ProductCad from "../pages/Forms/ProductCad.tsx";
 import ServiceCad from "../pages/Forms/ServiceCad.tsx";
+import CadEnterLeft from "../pages/Forms/CadEnterLeft.tsx";
 
 export const AppRouter = () => {
   return (
@@ -33,6 +34,9 @@ export const AppRouter = () => {
 
           <Route path="/productCad" element={<ProductCad />} />
           <Route path="/serviceCad" element={<ServiceCad />} />
+
+
+          <Route path="/CadEnter" element={<CadEnterLeft />}></Route>
 
           <Route path="/login" element={<Login />} />
         <Route path="/dre" element={<DREPage />} /> 

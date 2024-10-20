@@ -48,7 +48,6 @@ const MenuPage = () => {
                 <Heading as="h2" size="lg" textAlign="center" color="black" mb={6}>
                     Qual é o seu modelo de negócio:
                 </Heading>
-
                 <VStack spacing={4}>
                     {menuItems.map((item) => (
                         <HStack
