@@ -8,6 +8,8 @@ import DynamicFormPage from "../pages/Forms/DynamicFormPage.tsx";
 import FormProdService from "../pages/Forms/FormProdService.tsx";
 import ProductCad from "../pages/Forms/ProductCad.tsx";
 import ServiceCad from "../pages/Forms/ServiceCad.tsx";
+import Signup from "../pages/Register.tsx";
+import CompleteRegistration from "../pages/CompleteRegistration.tsx";
 
 export const AppRouter = () => {
   return (
@@ -36,6 +38,8 @@ export const AppRouter = () => {
 
           <Route path="/login" element={<Login />} />
         <Route path="/dre" element={<DREPage />} /> 
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/complete-registration" element={<CompleteRegistration />} />
       </Routes>
     </Router>
   );
