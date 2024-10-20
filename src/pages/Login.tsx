@@ -17,12 +17,16 @@ import {
 const Login = () => {
   const [username, setUsername] = useState("");
   const [, setPassword] = useState("");
-  const navigate = useNavigate(); // Hook para navegação
+  const navigate = useNavigate(); 
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     alert(`${username} autenticado com sucesso!`);
-    navigate('/home'); // Redireciona para a página Home
+    navigate('/home'); 
+  };
+
+  const handleRegisterRedirect = () => {
+    navigate('/signup'); 
   };
 
   return (
@@ -49,8 +53,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
-
-            {/* Campo de e-mail */}
+        
             <Box position="relative" w="100%">
               <Input
                 type="email"
@@ -66,8 +69,7 @@ const Login = () => {
               />
               <Icon as={FaUser} position="absolute" right="25px" top="50%" transform="translateY(-50%)" fontSize="18px" color="white" />
             </Box>
-
-            {/* Campo de senha */}
+           
             <Box position="relative" w="100%">
               <Input
                 type="password"
@@ -83,16 +85,14 @@ const Login = () => {
               />
               <Icon as={FaLock} position="absolute" right="25px" top="50%" transform="translateY(-50%)" fontSize="18px" color="white" />
             </Box>
-
-            {/* Lembre-me e Esqueceu senha */}
+            
             <HStack justify="space-between" w="100%" fontSize="14.5px">
               <Checkbox color="white">Lembre de mim</Checkbox>
               <Link color="white" href="#" _hover={{ textDecoration: "underline" }}>
                 Esqueceu a senha?
               </Link>
             </HStack>
-
-            {/* Botão de login */}
+           
             <Button
               type="submit"
               width="100%"
@@ -103,17 +103,15 @@ const Login = () => {
             >
               Entrar
             </Button>
-
-            {/* Link de cadastro */}
+            
             <Box textAlign="center" color="white" mt={4}>
               <Text>
                 Não tem uma conta?{" "}
-                <Link href="#" color="white" _hover={{ textDecoration: "underline" }}>
+                <Link color="white" _hover={{ textDecoration: "underline" }} onClick={handleRegisterRedirect}>
                   Registrar
                 </Link>
               </Text>
             </Box>
-
           </VStack>
         </form>
       </Box>
@@ -122,4 +120,3 @@ const Login = () => {
 };
 
 export default Login;
-
