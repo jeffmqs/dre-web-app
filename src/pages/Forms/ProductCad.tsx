@@ -3,38 +3,46 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-const CadProd = () => {
+const CadProduto = () => {
     const navigate = useNavigate();
 
     // Estados para armazenar os valores dos campos do formulário
     const [nomeProduto, setNomeProduto] = useState('');
     const [custoProducao, setCustoProducao] = useState('');
-    const [valorVenda, setValorVenda] = useState('');
-    const [mediaProducao, setMediaProducao] = useState('');
+    const [valorVendaAtual, setValorVendaAtual] = useState('');
+    const [numeroMedioProducao, setNumeroMedioProducao] = useState('');
     const [metaLucro, setMetaLucro] = useState('');
 
     // Estado para armazenar os produtos cadastrados
     const [produtos, setProdutos] = useState<Array<{
         nomeProduto: string;
         custoProducao: string;
-        valorVenda: string;
-        mediaProducao: string;
+        valorVendaAtual: string;
+        numeroMedioProducao: string;
         metaLucro: string;
     }>>([]);
 
+    // Função de validação dos campos
+    const isFormValid = () => {
+        return nomeProduto.trim() !== '' &&
+               custoProducao.trim() !== '' &&
+               valorVendaAtual.trim() !== '' &&
+               numeroMedioProducao.trim() !== '' &&
+               metaLucro.trim() !== '';
+    };
+
     // Função de submissão do formulário
     const handleSubmit = () => {
-        const novoProduto: {
-            nomeProduto: string;
-            custoProducao: string;
-            valorVenda: string;
-            mediaProducao: string;
-            metaLucro: string;
-        } = {
+        if (!isFormValid()) {
+            alert("Por favor, preencha todos os campos antes de adicionar o produto.");
+            return;
+        }
+
+        const novoProduto = {
             nomeProduto,
             custoProducao,
-            valorVenda,
-            mediaProducao,
+            valorVendaAtual,
+            numeroMedioProducao,
             metaLucro,
         };
 
@@ -44,9 +52,18 @@ const CadProd = () => {
         // Limpa os campos após a adição
         setNomeProduto('');
         setCustoProducao('');
-        setValorVenda('');
-        setMediaProducao('');
+        setValorVendaAtual('');
+        setNumeroMedioProducao('');
         setMetaLucro('');
+    };
+
+    // Função para enviar os dados cadastrados
+    const handleEnviar = () => {
+        // Lógica para enviar os dados cadastrados (por exemplo, salvar no banco de dados)
+        console.log("Produtos enviados:", produtos);
+        alert("Serviços enviados com sucesso!");
+        // Redireciona para a página de cadastro de serviços
+        navigate("/cadEnter");
     };
 
     return (
@@ -99,16 +116,16 @@ const CadProd = () => {
                             size="lg"
                         />
                         <Input
-                            placeholder="Informe o valor de venda do produto"
-                            value={valorVenda}
-                            onChange={(e) => setValorVenda(e.target.value)}
+                            placeholder="Informe o valor de venda atual do produto"
+                            value={valorVendaAtual}
+                            onChange={(e) => setValorVendaAtual(e.target.value)}
                             bg="white"
                             size="lg"
                         />
                         <Input
-                            placeholder="Informe a média de produção"
-                            value={mediaProducao}
-                            onChange={(e) => setMediaProducao(e.target.value)}
+                            placeholder="Informe o número médio de produção"
+                            value={numeroMedioProducao}
+                            onChange={(e) => setNumeroMedioProducao(e.target.value)}
                             bg="white"
                             size="lg"
                         />
@@ -161,12 +178,27 @@ const CadProd = () => {
                                 >
                                     <Text><strong>Produto:</strong> {produto.nomeProduto}</Text>
                                     <Text><strong>Custo de Produção:</strong> R$ {produto.custoProducao}</Text>
-                                    <Text><strong>Valor de Venda:</strong> R$ {produto.valorVenda}</Text>
-                                    <Text><strong>Média de Produção:</strong> {produto.mediaProducao} horas</Text>
+                                    <Text><strong>Valor de Venda Atual:</strong> R$ {produto.valorVendaAtual}</Text>
+                                    <Text><strong>Número Médio de Produção:</strong> {produto.numeroMedioProducao}</Text>
                                     <Text><strong>Meta de Lucro:</strong> R$ {produto.metaLucro}</Text>
                                 </Box>
                             ))}
                         </VStack>
+                    )}
+
+                    {/* Botão de Enviar: só aparece se houver produtos cadastrados */}
+                    {produtos.length > 0 && (
+                        <Button
+                            mt={6}
+                            bg="black"
+                            color="white"
+                            _hover={{ bg: "#333" }}
+                            size="lg"
+                            width="100%"
+                            onClick={handleEnviar}
+                        >
+                            Enviar
+                        </Button>
                     )}
                 </Box>
             </SimpleGrid>
@@ -174,4 +206,4 @@ const CadProd = () => {
     );
 };
 
-export default CadProd;
+export default CadProduto;

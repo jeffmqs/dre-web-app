@@ -22,15 +22,23 @@ const CadServico = () => {
         metaLucro: string;
     }>>([]);
 
+    // Função de validação dos campos
+    const isFormValid = () => {
+        return nomeServico.trim() !== '' && 
+               custoExecucao.trim() !== '' && 
+               valorCobrado.trim() !== '' && 
+               tempoMedioExecucao.trim() !== '' && 
+               metaLucro.trim() !== '';
+    };
+
     // Função de submissão do formulário
     const handleSubmit = () => {
-        const novoServico: {
-            nomeServico: string;
-            custoExecucao: string;
-            valorCobrado: string;
-            tempoMedioExecucao: string;
-            metaLucro: string;
-        } = {
+        if (!isFormValid()) {
+            alert("Por favor, preencha todos os campos antes de adicionar o serviço.");
+            return;
+        }
+
+        const novoServico = {
             nomeServico,
             custoExecucao,
             valorCobrado,
@@ -47,6 +55,15 @@ const CadServico = () => {
         setValorCobrado('');
         setTempoMedioExecucao('');
         setMetaLucro('');
+    };
+
+    // Função para enviar os dados cadastrados
+    const handleEnviar = () => {
+        // Aqui você pode adicionar a lógica de envio, como fazer um POST para um backend
+        console.log("Serviços enviados:", servicos);
+        alert("Serviços enviados com sucesso!");
+        // Redireciona para a página de cadastro de serviços
+        navigate("/cadEnter");
     };
 
     return (
@@ -167,6 +184,21 @@ const CadServico = () => {
                                 </Box>
                             ))}
                         </VStack>
+                    )}
+
+                    {/* Botão de Enviar: só aparece se houver serviços cadastrados */}
+                    {servicos.length > 0 && (
+                        <Button
+                            mt={6}
+                            bg="black"
+                            color="white"
+                            _hover={{ bg: "#333" }}
+                            size="lg"
+                            width="100%"
+                            onClick={handleEnviar}
+                        >
+                            Enviar
+                        </Button>
                     )}
                 </Box>
             </SimpleGrid>
