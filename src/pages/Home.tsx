@@ -1,6 +1,7 @@
 import { Box, Button, Heading, Grid, GridItem, Stack } from "@chakra-ui/react";
 import { FaCommentsDollar, FaChartLine, FaChartPie, FaRegQuestionCircle } from "react-icons/fa";
 import { GiSellCard } from "react-icons/gi";
+import { LuDollarSign } from "react-icons/lu";
 import { LuCalendarClock } from "react-icons/lu";
 
 interface ServiceButtonProps {
@@ -67,9 +68,9 @@ export const Home = () => {
         <Grid
           templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }}
           gap={6}
-        >
+        >         
           <GridItem>
-            <ServiceButton icon={<FaCommentsDollar size={30} />} label="Chat" />
+            <ServiceButton icon={<LuDollarSign size={30} />} label="Calcular Valuation" />
           </GridItem>
           <GridItem>
             <ServiceButton icon={<LuCalendarClock size={30} />} label="Histórico Financeiro" />
@@ -82,6 +83,9 @@ export const Home = () => {
           </GridItem>
           <GridItem>
             <ServiceButton icon={<GiSellCard size={30} />} label="Simulador de Vendas" />
+          </GridItem>
+          <GridItem>
+            <ServiceButton icon={<FaCommentsDollar size={30} />} label="Chat" />
           </GridItem>
           <GridItem>
             <ServiceButton icon={<FaRegQuestionCircle size={30} />} label="Ajuda" />
