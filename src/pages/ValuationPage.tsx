@@ -42,7 +42,7 @@ export const Home = () => {
         textAlign="center"
       >
         <Heading as="h2" size="lg" mb={4}>
-          Olá, Mosca Branca
+          TESTE DE PÁGINA
         </Heading>
         <Button
           bg="#EDFFB2"
