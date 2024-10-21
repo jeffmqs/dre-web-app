@@ -165,12 +165,6 @@ export const DRETable = () => {
               <Td><Input type="number" step="0.01" placeholder="0.00" border="1px solid gray" /></Td>
             </Tr>
             <Tr>
-              <Td>Valuation</Td>
-              <Td><Input type="number" step="0.01" placeholder="0.00" border="1px solid gray" /></Td>
-              <Td><Input type="number" step="0.01" placeholder="0.00" border="1px solid gray" /></Td>
-              <Td><Input type="number" step="0.01" placeholder="0.00" border="1px solid gray" /></Td>
-            </Tr>
-            <Tr>
               <Td>Valuation em relação ao múltiplo</Td>
               <Td><Input type="number" step="0.01" placeholder="0.00" border="1px solid gray" /></Td>
               <Td><Input type="number" step="0.01" placeholder="0.00" border="1px solid gray" /></Td>
