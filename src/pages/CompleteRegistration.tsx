@@ -55,7 +55,7 @@ const CompleteRegistration: React.FC = () => {
           </Heading>
 
           <VStack spacing={4}>
-            {/* Campo de Data de Nascimento */}
+            
             <Box position="relative" width="100%">
               <Input
                 type="date"
@@ -69,7 +69,7 @@ const CompleteRegistration: React.FC = () => {
               />
             </Box>
 
-            {/* Campo de CPF */}
+            
             <Box position="relative" width="100%">
               <Input
                 type="text"
@@ -83,7 +83,7 @@ const CompleteRegistration: React.FC = () => {
               />
             </Box>
 
-            {/* Campo de CNPJ (opcional) */}
+            
             <Box position="relative" width="100%">
               <Input
                 type="text"
@@ -97,7 +97,7 @@ const CompleteRegistration: React.FC = () => {
               />
             </Box>
 
-            {/* Campo de Endereço */}
+            
             <Box position="relative" width="100%">
               <Input
                 type="text"

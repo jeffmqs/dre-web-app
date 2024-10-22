@@ -10,6 +10,8 @@ import {
   VStack,
   Text,
   Link,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 const Signup = () => {
@@ -17,17 +19,32 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(""); 
   const navigate = useNavigate(); 
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+   
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("O e-mail deve ser válido e conter '.com'.");
+      return;
+    }
+
+    
+    const passwordRegex = /^(?=.*[A-Za-z]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      setError("A senha deve ter pelo menos 6 caracteres, e que ao menos uma letra (minúscula ou maiúscula) esteja presente.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       alert("As senhas não coincidem. Por favor, tente novamente.");
       return;
     }
 
-    // Redireciona para a tela de CompleteRegistration passando os dados de username e email
+    setError("");
     navigate("/complete-registration", { state: { username, email } });
   };
 
@@ -41,7 +58,7 @@ const Signup = () => {
       display="flex" 
       alignItems="center" 
       justifyContent="center" 
-      bgImage="url('/bg.png')" // Mantenha a mesma imagem de fundo
+      bgImage="url('/bg.png')" 
       bgSize="cover" 
       bgPosition="center"
     >
@@ -56,6 +73,13 @@ const Signup = () => {
         <Heading as="h2" size="lg" textAlign="center" color="white" mb={6}>
           Crie sua conta
         </Heading>
+
+        {error && (
+          <Alert status="error" mb={4}>
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
