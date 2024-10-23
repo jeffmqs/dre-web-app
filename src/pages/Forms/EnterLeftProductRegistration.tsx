@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Heading, HStack, Icon, Input, Text, Textarea, VStack } from "@chakra-ui/react";
-import { FaChevronRight, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
 import { Popover, PopoverTrigger, PopoverContent, PopoverBody, Grid, GridItem } from "@chakra-ui/react";
@@ -21,30 +22,30 @@ const menuItems = [
 const steps = [
   {
     label: "Selecione um produto ou serviço para continuar:",
-    component: "menu", // A primeira etapa é o menu
+    component: "menu",
   },
   {
     label: "Informe os dados sobre o produto selecionado:",
-    component: "form", // Inputs de quantidade e preço
+    component: "form",
   },
   {
     label: "Adicione uma descrição para esta entrada:",
-    component: "description", // Novo passo para adicionar uma descrição
+    component: "description",
   },
   {
     label: "Agora informe a data desta entrada:",
-    component: "datePicker", // Passo para escolher a data
+    component: "datePicker",
   },
 ];
 
 const MenuPage = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0); // Controle da etapa atual
-  const [selectedItem, setSelectedItem] = useState(""); // Armazena o item selecionado
-  const [quantity, setQuantity] = useState(""); // Quantidade do item
-  const [price, setPrice] = useState(""); // Preço do item
-  const [description, setDescription] = useState(""); // Descrição do item
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // Data selecionada
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedItem, setSelectedItem] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // Data inicial como null
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Função para avançar para a próxima etapa
@@ -76,7 +77,7 @@ const MenuPage = () => {
     const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
 
     const handleDateSelected = ({ date }: { date: Date }) => {
-      setSelectedDate(date);
+      setSelectedDate(date); // Atualiza a data selecionada
       onClose(); // Fecha o popover após selecionar a data
     };
 
@@ -90,22 +91,30 @@ const MenuPage = () => {
         {calendars.map((calendar, index) => (
           <React.Fragment key={index}>
             <GridItem colSpan={7} textAlign="center">
-              <Button size="sm" {...getBackProps({ calendars })}>
-                Prev
-              </Button>
-              <Text mx={4} display="inline">
-                {format(calendar.month, "MMMM yyyy")}
-              </Text>
-              <Button size="sm" {...getForwardProps({ calendars })}>
-                Next
-              </Button>
+              <HStack justify="space-between" mb={2}>
+                <Button size="sm" {...getBackProps({ calendars, offset: 12 })}>
+                  <FiChevronsLeft />
+                </Button>
+                <Button size="sm" {...getBackProps({ calendars })}>
+                  <FaChevronLeft />
+                </Button>
+                <Text fontWeight="normal" mx={2}>
+                    {format(new Date(calendar.year, calendar.month, 1), "MMMM yyyy")}
+                </Text>
+                <Button size="sm" {...getForwardProps({ calendars })}>
+                  <FaChevronRight />
+                </Button>
+                <Button size="sm" {...getForwardProps({ calendars, offset: 12 })}>
+                  <FiChevronsRight />
+                </Button>
+              </HStack>
             </GridItem>
             {calendar.weeks.map((week, weekIndex) =>
               week.map((dateObj, dateIndex) => {
                 if (typeof dateObj === "string") {
                   return <GridItem key={dateIndex} />;
                 }
-                const { date, today, selected, selectable } = dateObj;
+                const { date, selected, selectable } = dateObj;
                 const isHovered = date === hoveredDate;
 
                 return (
@@ -140,7 +149,7 @@ const MenuPage = () => {
           placeholder="Clique para selecionar uma data"
           size="lg"
           variant="flushed"
-          value={selectedDate ? format(selectedDate, "dd/MM/yyyy") : ""}
+          value={selectedDate ? format(selectedDate, "dd/MM/yyyy") : ""} // Verifica se a data está selecionada, caso contrário deixa vazio
           onClick={onOpen}
           readOnly
         />
@@ -155,17 +164,15 @@ const MenuPage = () => {
 
   return (
     <Box minHeight="100vh" display="flex" justifyContent="center" alignItems="center" bg="gray.50" p={4} position="relative">
-      {/* Seta para voltar */}
-      {currentStep > 0 && (
-        <Box position="absolute" top="4" left="4" cursor="pointer" onClick={prevStep}>
-          <HStack spacing={2}>
-            <Icon as={FaArrowLeft} color="black" boxSize="20px" />
-            <Text fontSize="lg" color="black" fontWeight="medium">
-              Voltar
-            </Text>
-          </HStack>
-        </Box>
-      )}
+    {/* Botão dinâmico: "Cadastro de entradas e saídas" ou "Voltar" */}
+    <Box position="absolute" top="5%" left="5%" cursor="pointer" onClick={currentStep === 0 ? () => navigate("/cadEnter") : prevStep}>
+      <HStack spacing={2}>
+        <Icon as={FaArrowLeft} color="black" boxSize="20px" />
+        <Text fontSize="lg" color="black" fontWeight="medium">
+          {currentStep === 0 ? "Cadastro de entradas e saídas" : "Voltar"}
+        </Text>
+      </HStack>
+    </Box>
 
       {/* Conteúdo dinâmico da página com base na etapa */}
       <Box width={{ base: "90%", md: "400px" }} mt="10">

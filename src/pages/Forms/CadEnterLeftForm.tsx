@@ -39,7 +39,7 @@ const MenuPage = () => {
                 top="5%"
                 left="5%"
                 cursor="pointer"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/productCad")}
             >
                 <HStack spacing={2}>
                     <Icon as={FaArrowLeft} color="black" boxSize="20px" />
@@ -320,7 +320,7 @@ const MenuPage = () => {
                     bg="#C6FF06"
                     _hover={{ bg: "#b8f306" }}
                     variant="solid"
-                    onClick={() => alert(`Você selecionou: ${value}`)}  // Lógica para continuar o cadastro
+                    onClick={() => navigate(`/EnterLeftProductRegistration`)}
                 >
                     Continuar Cadastro
                 </Button>
