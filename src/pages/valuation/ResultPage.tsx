@@ -34,7 +34,7 @@ const ResultPage = () => {
                     setLoading(false);
                 });
         } else {
-            // Se não houver dados no localStorage, redirecionar ou mostrar mensagem
+            // Se não houver dados no localStorage, mostrar mensagem
             setLoading(false);
         }
     }, []);
@@ -111,4 +111,3 @@ const ResultPage = () => {
 };
 
 export default ResultPage;
-    
