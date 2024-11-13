@@ -1,6 +1,6 @@
 // src/pages/CadServico.tsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     VStack,
@@ -22,7 +22,6 @@ import {
     AccordionPanel,
     AccordionIcon,
     Divider,
-    Stack,
     useToast,
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaPlus, FaTrash } from "react-icons/fa";
@@ -66,6 +65,9 @@ const CadServico = () => {
     const navigate = useNavigate();
     const toast = useToast();
 
+    // Definir chave para localStorage
+    const STORAGE_KEY = "dreAnualRequests";
+
     // Estado para armazenar todos os anos com suas respectivas receitas e despesas
     const [dreAnualRequests, setDreAnualRequests] = useState<DreAnualRequest[]>([]);
 
@@ -74,6 +76,33 @@ const CadServico = () => {
     const [cmv, setCmv] = useState("");
     const [depreciacao, setDepreciacao] = useState("");
     const [taxaImposto, setTaxaImposto] = useState("");
+
+    // Estado para controlar a exibição do botão de prosseguir
+    const [isSaved, setIsSaved] = useState(false);
+
+    // Carregar dados do localStorage ao montar o componente
+    useEffect(() => {
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        if (storedData) {
+            try {
+                setDreAnualRequests(JSON.parse(storedData));
+            } catch (error) {
+                console.error("Erro ao parsear dados do localStorage:", error);
+                toast({
+                    title: "Erro",
+                    description: "Falha ao carregar dados salvos.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        }
+    }, [STORAGE_KEY, toast]);
+
+    // Salvar dados no localStorage sempre que dreAnualRequests mudar
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dreAnualRequests));
+    }, [dreAnualRequests, STORAGE_KEY]);
 
     // Função para adicionar um novo ano
     const handleAddAno = () => {
@@ -133,11 +162,26 @@ const CadServico = () => {
         setCmv("");
         setDepreciacao("");
         setTaxaImposto("");
+
+        toast({
+            title: "Sucesso",
+            description: "Ano adicionado com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     // Função para remover um ano
     const handleRemoveAno = (ano: number) => {
         setDreAnualRequests(dreAnualRequests.filter((item) => item.ano !== ano));
+        toast({
+            title: "Sucesso",
+            description: `Ano ${ano} removido com sucesso!`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     // Função para adicionar uma receita a um ano específico
@@ -149,6 +193,13 @@ const CadServico = () => {
                     : item
             )
         );
+        toast({
+            title: "Sucesso",
+            description: "Receita adicionada com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     // Função para remover uma receita de um ano específico
@@ -163,6 +214,13 @@ const CadServico = () => {
                     : item
             )
         );
+        toast({
+            title: "Sucesso",
+            description: "Receita removida com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     // Função para adicionar uma despesa a um ano específico
@@ -174,6 +232,13 @@ const CadServico = () => {
                     : item
             )
         );
+        toast({
+            title: "Sucesso",
+            description: "Despesa adicionada com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     // Função para remover uma despesa de um ano específico
@@ -188,14 +253,22 @@ const CadServico = () => {
                     : item
             )
         );
+        toast({
+            title: "Sucesso",
+            description: "Despesa removida com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
-    // Função para enviar os dados ao backend
-    const handleEnviar = () => {
+    // Função para salvar os dados no localStorage
+    const handleSalvar = () => {
+        // Verifica se há dados para salvar
         if (dreAnualRequests.length === 0) {
             toast({
                 title: "Erro",
-                description: "Nenhum ano adicionado para envio.",
+                description: "Nenhum dado para salvar.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -203,63 +276,24 @@ const CadServico = () => {
             return;
         }
 
-        // Verifica se cada ano possui receitas e despesas
-        for (const dre of dreAnualRequests) {
-            if (dre.receitas.length === 0 && dre.despesas.length === 0) {
-                toast({
-                    title: "Erro",
-                    description: `O ano ${dre.ano} deve ter pelo menos uma receita ou despesa.`,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                });
-                return;
-            }
-        }
+        // Opicional: Adicionar validações adicionais, se necessário
 
-        // Prepara o request conforme a estrutura DreAnualRequest
-        const dataToSend = {
-            taxaDesconto: 0.1, // Este valor pode ser obtido de outro local ou formulário
-            anosProjecao: 7, // Este valor pode ser obtido de outro local ou formulário
-            dreAnualRequests,
-        };
+        // Dados já estão sendo salvos automaticamente via useEffect
+        // Apenas fornecemos um feedback ao usuário
+        toast({
+            title: "Sucesso",
+            description: "Dados salvos no localStorage com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
 
-        fetch("http://localhost:8080/api/dre/valuation", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Erro na resposta da API");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log("Dados enviados com sucesso:", data);
-                toast({
-                    title: "Sucesso",
-                    description: "Dados enviados com sucesso!",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                });
-                // Limpa os dados após o envio
-                setDreAnualRequests([]);
-                navigate("/financialData");
-            })
-            .catch((error) => {
-                console.error("Erro ao enviar dados:", error);
-                toast({
-                    title: "Erro",
-                    description: "Erro ao enviar dados. Veja o console para mais detalhes.",
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            });
+        // Atualiza o estado para exibir o botão de prosseguir
+        setIsSaved(true);
+    };
+    // Função para ir para o cálculo de valuation
+    const handleProsseguir = () => {
+        navigate("/FinancialData"); // Atualize a rota conforme necessário
     };
 
     return (
@@ -538,7 +572,7 @@ const CadServico = () => {
                         </Accordion>
                     )}
 
-                    {/* Botão para enviar os dados */}
+                    {/* Botão para salvar os dados no localStorage */}
                     {dreAnualRequests.length > 0 && (
                         <Button
                             mt={6}
@@ -547,11 +581,26 @@ const CadServico = () => {
                             _hover={{ bg: "#333" }}
                             size="lg"
                             width="100%"
-                            onClick={handleEnviar}
+                            onClick={handleSalvar}
                         >
-                            Enviar Itens
+                            Salvar Dados
                         </Button>
                     )}
+                    {/* Botão para prosseguir para o cálculo de valuation, visível após salvar */}
+                    {isSaved && (
+                        <Button
+                            mt={6}
+                            bg="green.500"
+                            color="white"
+                            _hover={{ bg: "green.400" }}
+                            size="lg"
+                            width="100%"
+                            onClick={handleProsseguir}
+                        >
+                            Prosseguir para o Cálculo de Valuation
+                        </Button>
+                    )}
+
                 </Box>
             </SimpleGrid>
         </Box>
@@ -644,6 +693,14 @@ const ReceitaForm: React.FC<ReceitaFormProps> = ({ ano, onAddReceita }) => {
         setTicketMedioConsultorias("");
         setReceitaBrutaTotal("");
         setComissoes("");
+
+        toast({
+            title: "Sucesso",
+            description: "Receita adicionada com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     return (
@@ -859,6 +916,14 @@ const DespesaForm: React.FC<DespesaFormProps> = ({ ano, onAddDespesa }) => {
         setValor("");
         setComissoes("");
         setCmv("");
+
+        toast({
+            title: "Sucesso",
+            description: "Despesa adicionada com sucesso!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     return (

@@ -1,0 +1,33 @@
+{
+  "ano": 2021,
+  "receitas": [
+    {
+      "modeloReceita": "Saas",
+      "tipoReceita": "Inbound",
+      "descricao": "Receita de assinatura",
+      "ticketMedio": 5000,
+      "cac": 500,
+      "investimentoMkt": 2000,
+      "conversaoInbound": 0.1,
+      "vendasInbound": 50,
+      "clientesTotais": 200,
+      "cancelamento": 0.05,
+      "consultorias": 10,
+      "ticketMedioConsultorias": 3000,
+      "receitaBrutaTotal": 250000,
+      "comissoes": 100
+    }
+  ],
+  "despesas": [
+    {
+      "descricao": "AWS",
+      "tipoDespesa": "Fixa",
+      "valor": 10000,
+      "comissoes": 0,
+      "cmv": 5000
+    }
+  ],
+  "cmv": 50000,
+  "depreciacao": 10000,
+  "taxaImposto": 0.15
+}
