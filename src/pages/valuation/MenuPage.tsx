@@ -1,15 +1,17 @@
-import { Box, VStack, HStack, Icon, Text, Heading } from "@chakra-ui/react";
+// src/pages/MenuPage.tsx
+
+import {
+    Box, VStack, HStack, Icon, Text, Heading, Button
+} from "@chakra-ui/react";
 import { FaChevronRight, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import { MdMiscellaneousServices } from "react-icons/md";
-import {IoBagHandleOutline} from "react-icons/io5";
-
+import { IoBagHandleOutline } from "react-icons/io5";
 
 const menuItems = [
-    { label: "Um produto", icon: IoBagHandleOutline, path: "/productCad" },
-    { label: "Um serviço", icon: MdMiscellaneousServices, path: "/serviceCad" },
-
+    { label: "Cadastrar Produto", icon: IoBagHandleOutline, path: "/productCad" },
+    { label: "Cadastrar Serviço", icon: MdMiscellaneousServices, path: "/serviceCad" },
 ];
 
 const MenuPage = () => {
@@ -18,36 +20,36 @@ const MenuPage = () => {
     const handleNavigation = (path: string) => {
         navigate(path);
     };
+
     return (
         <Box
             minHeight="100vh"
             display="flex"
             justifyContent="center"
-            alignItems={{ base: "flex-start", md: "center" }} // Alinhado no centro no desktop e mais em cima no mobile
+            alignItems={{ base: "flex-start", md: "center" }}
             bg="white"
             p={4}
-            position="relative" // Para permitir o posicionamento absoluto da seta
+            position="relative"
         >
             {/* Seta para voltar com o nome ao lado */}
-            {/* Precisa ajustar o navigate para voltar para o ultimo step da pagina de form */}
             <Box
                 position="absolute"
                 top={{ base: "5%", md: "10%" }}
                 left={{ base: "5%", md: "10%" }}
                 cursor="pointer"
-                onClick={() => navigate("/cost")}
+                onClick={() => navigate("/financialData")}
             >
                 <HStack spacing={2}>
                     <Icon as={FaArrowLeft} color="black" boxSize="20px" />
                     <Text fontSize="lg" color="black" fontWeight="medium">
-                        Formulário inicial
+                        Página Inicial
                     </Text>
                 </HStack>
             </Box>
 
             <Box width={{ base: "90%", md: "450px" }} mt={{ base: "20%", md: "0" }}>
                 <Heading as="h2" size="lg" textAlign="center" color="black" mb={6}>
-                Cadastro de entradas e saídas:
+                    Cadastro de Entradas e Saídas
                 </Heading>
 
                 <VStack spacing={4}>
@@ -83,6 +85,22 @@ const MenuPage = () => {
                         </HStack>
                     ))}
                 </VStack>
+
+                {/* Botão para Prosseguir para Dados Financeiros */}
+                <Box mt={8} textAlign="center">
+                    <Text fontSize="md" color="gray.600" mb={2}>
+                        Após cadastrar produtos ou serviços, prossiga para:
+                    </Text>
+                    <Button
+                        color="black"
+                        bg="#C6FF06"
+                        _hover={{ bg: "#b8f306" }}
+                        variant="solid"
+                        onClick={() => navigate("/financialData")}
+                    >
+                        Dados Financeiros
+                    </Button>
+                </Box>
             </Box>
         </Box>
     );

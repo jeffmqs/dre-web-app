@@ -1,7 +1,17 @@
+// src/pages/CadProduto.tsx
+
 import { Box, VStack, Input, Text, Heading, Button, Icon, HStack, SimpleGrid } from "@chakra-ui/react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+
+interface Produto {
+    nomeProduto: string;
+    custoProducao: number;
+    valorVendaAtual: number;
+    numeroMedioProducao: number;
+    metaLucro: number;
+}
 
 const CadProduto = () => {
     const navigate = useNavigate();
@@ -13,22 +23,13 @@ const CadProduto = () => {
     const [numeroMedioProducao, setNumeroMedioProducao] = useState('');
     const [metaLucro, setMetaLucro] = useState('');
 
-    // Estado para armazenar os produtos cadastrados
-    const [produtos, setProdutos] = useState<Array<{
-        nomeProduto: string;
-        custoProducao: string;
-        valorVendaAtual: string;
-        numeroMedioProducao: string;
-        metaLucro: string;
-    }>>([]);
-
     // Função de validação dos campos
     const isFormValid = () => {
         return nomeProduto.trim() !== '' &&
-               custoProducao.trim() !== '' &&
-               valorVendaAtual.trim() !== '' &&
-               numeroMedioProducao.trim() !== '' &&
-               metaLucro.trim() !== '';
+            custoProducao.trim() !== '' &&
+            valorVendaAtual.trim() !== '' &&
+            numeroMedioProducao.trim() !== '' &&
+            metaLucro.trim() !== '';
     };
 
     // Função de submissão do formulário
@@ -38,16 +39,22 @@ const CadProduto = () => {
             return;
         }
 
-        const novoProduto = {
+        const novoProduto: Produto = {
             nomeProduto,
-            custoProducao,
-            valorVendaAtual,
-            numeroMedioProducao,
-            metaLucro,
+            custoProducao: parseFloat(custoProducao),
+            valorVendaAtual: parseFloat(valorVendaAtual),
+            numeroMedioProducao: parseInt(numeroMedioProducao, 10),
+            metaLucro: parseFloat(metaLucro),
         };
 
-        // Adiciona o novo produto à lista de produtos
-        setProdutos([...produtos, novoProduto]);
+        // Recupera os produtos existentes do localStorage
+        const produtosExistentes: Produto[] = JSON.parse(localStorage.getItem("produtos") || "[]");
+
+        // Adiciona o novo produto à lista
+        const produtosAtualizados = [...produtosExistentes, novoProduto];
+
+        // Salva a lista atualizada no localStorage
+        localStorage.setItem("produtos", JSON.stringify(produtosAtualizados));
 
         // Limpa os campos após a adição
         setNomeProduto('');
@@ -57,13 +64,13 @@ const CadProduto = () => {
         setMetaLucro('');
     };
 
-    // Função para enviar os dados cadastrados
+    // Função para enviar os dados cadastrados e prosseguir
     const handleEnviar = () => {
-        // Lógica para enviar os dados cadastrados (por exemplo, salvar no banco de dados)
-        console.log("Produtos enviados:", produtos);
-        alert("Serviços enviados com sucesso!");
-        // Redireciona para a página de cadastro de serviços
-        navigate("/cadEnter");
+        // Aqui você pode adicionar a lógica de envio, como fazer um POST para um backend
+        console.log("Produtos enviados:", JSON.parse(localStorage.getItem("produtos") || "[]"));
+        alert("Produtos enviados com sucesso!");
+        // Navega para a página de seleção ou resultados
+        navigate("/financialData");
     };
 
     return (
@@ -82,12 +89,12 @@ const CadProduto = () => {
                 top="5%"
                 left="5%"
                 cursor="pointer"
-                onClick={() => navigate("/formProdService")}
+                onClick={() => navigate("/menu")}
             >
                 <HStack spacing={2}>
                     <Icon as={FaArrowLeft} color="black" boxSize="20px" />
                     <Text fontSize="lg" color="black" fontWeight="medium">
-                        Cadastro de produtos
+                        Voltar ao Menu
                     </Text>
                 </HStack>
             </Box>
@@ -102,35 +109,39 @@ const CadProduto = () => {
 
                     <VStack spacing={4}>
                         <Input
-                            placeholder="Informe o nome do produto"
+                            placeholder="Nome do Produto"
                             value={nomeProduto}
                             onChange={(e) => setNomeProduto(e.target.value)}
                             bg="white"
                             size="lg"
                         />
                         <Input
-                            placeholder="Informe o custo de produção do produto"
+                            placeholder="Custo de Produção (R$)"
+                            type="number"
                             value={custoProducao}
                             onChange={(e) => setCustoProducao(e.target.value)}
                             bg="white"
                             size="lg"
                         />
                         <Input
-                            placeholder="Informe o valor de venda atual do produto"
+                            placeholder="Valor de Venda Atual (R$)"
+                            type="number"
                             value={valorVendaAtual}
                             onChange={(e) => setValorVendaAtual(e.target.value)}
                             bg="white"
                             size="lg"
                         />
                         <Input
-                            placeholder="Informe o número médio de produção"
+                            placeholder="Número Médio de Produção"
+                            type="number"
                             value={numeroMedioProducao}
                             onChange={(e) => setNumeroMedioProducao(e.target.value)}
                             bg="white"
                             size="lg"
                         />
                         <Input
-                            placeholder="Informe a meta de lucro"
+                            placeholder="Meta de Lucro (R$)"
+                            type="number"
                             value={metaLucro}
                             onChange={(e) => setMetaLucro(e.target.value)}
                             bg="white"
@@ -147,7 +158,7 @@ const CadProduto = () => {
                             size="lg"
                             mt={4}
                         >
-                            +
+                            Adicionar Produto
                         </Button>
                         <Text fontSize="lg" color="black" fontWeight="medium">
                             Adicionar outro produto
@@ -161,33 +172,32 @@ const CadProduto = () => {
                         Produtos Cadastrados:
                     </Heading>
 
-                    {produtos.length === 0 ? (
+                    {JSON.parse(localStorage.getItem("produtos") || "[]").length === 0 ? (
                         <Text textAlign="center" color="gray.500">
                             Nenhum produto cadastrado.
                         </Text>
                     ) : (
-                        <VStack spacing={4}>
-                            {produtos.map((produto, index) => (
+                        <VStack spacing={4} align="stretch">
+                            {JSON.parse(localStorage.getItem("produtos") || "[]").map((produto: Produto, index: number) => (
                                 <Box
                                     key={index}
                                     p={4}
                                     bg="gray.100"
                                     borderRadius="md"
-                                    width="100%"
                                     boxShadow="sm"
                                 >
                                     <Text><strong>Produto:</strong> {produto.nomeProduto}</Text>
-                                    <Text><strong>Custo de Produção:</strong> R$ {produto.custoProducao}</Text>
-                                    <Text><strong>Valor de Venda Atual:</strong> R$ {produto.valorVendaAtual}</Text>
+                                    <Text><strong>Custo de Produção:</strong> R$ {produto.custoProducao.toFixed(2)}</Text>
+                                    <Text><strong>Valor de Venda Atual:</strong> R$ {produto.valorVendaAtual.toFixed(2)}</Text>
                                     <Text><strong>Número Médio de Produção:</strong> {produto.numeroMedioProducao}</Text>
-                                    <Text><strong>Meta de Lucro:</strong> R$ {produto.metaLucro}</Text>
+                                    <Text><strong>Meta de Lucro:</strong> R$ {produto.metaLucro.toFixed(2)}</Text>
                                 </Box>
                             ))}
                         </VStack>
                     )}
 
                     {/* Botão de Enviar: só aparece se houver produtos cadastrados */}
-                    {produtos.length > 0 && (
+                    {JSON.parse(localStorage.getItem("produtos") || "[]").length > 0 && (
                         <Button
                             mt={6}
                             bg="black"
@@ -197,7 +207,7 @@ const CadProduto = () => {
                             width="100%"
                             onClick={handleEnviar}
                         >
-                            Enviar
+                            Enviar Produtos
                         </Button>
                     )}
                 </Box>

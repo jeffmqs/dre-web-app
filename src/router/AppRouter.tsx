@@ -12,6 +12,9 @@ import CadEnterLeft from "../pages/Forms/CadEnterLeftForm.tsx";
 import Signup from "../pages/Register.tsx";
 import CompleteRegistration from "../pages/CompleteRegistration.tsx";
 import EnterLeftProductRegistration from "../pages/Forms/EnterLeftProductRegistration.tsx";
+import FinancialDataPage from "../pages/valuation/FinancialDataPage.tsx";
+import MenuPage from "../pages/valuation/MenuPage.tsx";
+import ResultPage from "../pages/valuation/ResultPage.tsx";
 
 export const AppRouter = () => {
   return (
@@ -37,6 +40,13 @@ export const AppRouter = () => {
 
           <Route path="/productCad" element={<ProductCad />} />
           <Route path="/serviceCad" element={<ServiceCad />} />
+
+          {/* Página para cadastro de entradas e saídas */}
+          <Route path="/FinancialData" element={<FinancialDataPage />} />
+          <Route path="/MenuPage" element={<MenuPage />} />
+          <Route path="/result" element={<ResultPage />} />
+
+          {/* Página para cadastro de entradas e saídas */}
 
 
           <Route path="/CadEnter" element={<CadEnterLeft />}></Route>
