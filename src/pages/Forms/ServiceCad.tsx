@@ -155,6 +155,9 @@ const CadServico = () => {
             taxaImposto: parseFloat(taxaImposto),
         };
 
+         // Função de importação do CSV
+        
+
         setDreAnualRequests([...dreAnualRequests, novoDreAnual]);
 
         // Limpa os campos após adicionar
@@ -171,6 +174,47 @@ const CadServico = () => {
             isClosable: true,
         });
     };
+
+    const handleImportCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+    
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const text = reader.result as string;
+                const rows = text.split("\n");
+    
+                // Processamento do CSV
+                const data: DreAnualRequest = {
+                    ano: parseInt(rows[0].trim()) || 0, 
+                    cmv: parseFloat(rows[1].trim()) || 0, 
+                    depreciacao: parseFloat(rows[2].trim()) || 0, 
+                    taxaImposto: parseFloat(rows[3].trim()) || 0,
+                    receitas: [],  
+                    despesas: [] 
+                };
+    
+                // Atualiza os estados com os valores extraídos do CSV
+                setNovoAno(data.ano.toString());
+                setCmv(data.cmv.toString());
+                setDepreciacao(data.depreciacao.toString());
+                setTaxaImposto(data.taxaImposto.toString());
+    
+                // Atualiza a lista de anos com o novo dado importado
+                setDreAnualRequests(prevState => [...prevState, data]);
+    
+                toast({
+                    title: "Sucesso",
+                    description: "Arquivo CSV importado com sucesso!",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            };
+            reader.readAsText(file);
+        }
+    };
+    
 
     // Função para remover um ano
     const handleRemoveAno = (ano: number) => {
@@ -396,6 +440,27 @@ const CadServico = () => {
                         >
                             Adicionar Ano
                         </Button>
+
+                        <Button
+                            
+                            color="black"
+                            bg="#C6FF06"
+                            _hover={{ bg: "#b8f306" }}
+                            variant="solid"
+                            onClick={() => document.getElementById('csv-upload')?.click()}
+                            size="lg"
+                            width="100%"
+                        >
+                            Importar arquivo CSV
+                        </Button>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={handleImportCSV}
+                            style={{ display: "none" }} 
+                            id="csv-upload"
+                        />
+                        
                     </VStack>
                 </Box>
 
