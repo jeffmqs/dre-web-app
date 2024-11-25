@@ -7,7 +7,7 @@ import FormPage from "../pages/Forms/FormPage.tsx";
 import DynamicFormPage from "../pages/Forms/DynamicFormPage.tsx";
 import FormProdService from "../pages/Forms/FormProdService.tsx";
 import ProductCad from "../pages/Forms/ProductCad.tsx";
-import ServiceCad from "../pages/Forms/ServiceCad.tsx";
+import ServiceCad from "../pages/Forms/CadServico/ServiceCad.tsx";
 import CadEnterLeft from "../pages/Forms/CadEnterLeftForm.tsx";
 import Signup from "../pages/Register.tsx";
 import CompleteRegistration from "../pages/CompleteRegistration.tsx";
