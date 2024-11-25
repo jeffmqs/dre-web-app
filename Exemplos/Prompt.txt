@@ -1,0 +1,39 @@
+Prompt para Gerar cada tipo de arquivo
+
+No caso do Excel, cada aba (sheet) deve representar um ano, nomeada com o número do ano (por exemplo, 2024, 2025, etc.). Dentro de cada aba, os dados devem seguir a mesma estrutura do CSV, com uma coluna tipo para diferenciar entre receita, despesa, depreciacao e taxaImposto.
+
+Exemplo de Abas:
+
+Aba 2024:
+
+tipo	modeloReceita	tipoReceita	descricao	ticketMedio	cac	investimentoMkt	conversaoInbound	vendasInbound	clientesTotais	cancelamento	consultorias	ticketMedioConsultorias	receitaBrutaTotal	comissoes	tipoDespesa	valor	cmv	depreciacao	taxaImposto
+receita	SaaS	Inbound	Venda de Software	1000	200	500	0.1	50	500	0.05	10	150	50000	5					
+despesa			AWS												Fixa	3000	500		
+depreciacao																		1000	
+taxaImposto																			30
+Aba 2025:
+
+tipo	modeloReceita	tipoReceita	descricao	ticketMedio	cac	investimentoMkt	conversaoInbound	vendasInbound	clientesTotais	cancelamento	consultorias	ticketMedioConsultorias	receitaBrutaTotal	comissoes	tipoDespesa	valor	cmv	depreciacao	taxaImposto
+receita	Consultoria	Outbound	Serviços de Consultoria	1500	250	600	0.15	60	600	0.04	15	200	60000	5					
+despesa			Vendedores												Variável	4000	700		
+depreciacao																		1200	
+taxaImposto																			35
+ 
+O arquivo CSV deve ter uma coluna ano que indica a qual ano os dados pertencem, além de uma coluna tipo que define se a linha é uma receita, despesa, depreciacao ou taxaImposto. Veja o exemplo abaixo:
+
+csv
+Copiar código
+ano,tipo,modeloReceita,tipoReceita,descricao,ticketMedio,cac,investimentoMkt,conversaoInbound,vendasInbound,clientesTotais,cancelamento,consultorias,ticketMedioConsultorias,receitaBrutaTotal,comissoes,tipoDespesa,valor,cmv,depreciacao,taxaImposto
+2024,receita,SaaS,Inbound,Venda de Software,1000,200,500,0.1,50,500,0.05,10,150,50000,5,,,,,
+2024,despesa,,,AWS,, , , , , , , , , , ,Fixa,3000,500,, 
+2024,depreciacao,,,,,,,,,,,,,,,,,,1000,,
+2024,taxaImposto,,,,,,,,,,,,,,,,,, , , ,30
+2025,receita,Consultoria,Outbound,Serviços de Consultoria,1500,250,600,0.15,60,600,0.04,15,200,60000,5,,,,,
+2025,despesa,,,Vendedores,, , , , , , , , , ,Variável,4000,700,, 
+2025,depreciacao,,,,,,,,,,,,,,,,,,1200,,
+2025,taxaImposto,,,,,,,,,,,,,,,,,, , , ,35
+Notas Importantes:
+
+Colunas para depreciacao e taxaImposto: Essas linhas devem conter apenas o ano, o tipo e os valores correspondentes, deixando as demais colunas vazias.
+Valores Numéricos: Certifique-se de que os valores numéricos estejam no formato correto (sem caracteres especiais, vírgulas como separadores decimais, etc.).
+Consistência: Cada ano deve conter linhas suficientes para preencher receitas, despesas, depreciação e taxa de imposto.
