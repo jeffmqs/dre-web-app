@@ -4,14 +4,12 @@ import React, { useState, useEffect } from "react";
 import {
     Box,
     VStack,
-    Input,
     Text,
     Heading,
     Button,
     Icon,
     HStack,
     SimpleGrid,
-    Select,
     FormLabel,
     FormControl,
     NumberInput,
@@ -28,40 +26,8 @@ import { FaArrowLeft, FaPlus, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import DespesaForm from "./DespesaForm";
 import ReceitaForm from "./ReceitaForm";
+import {Despesa, DreAnualRequest, Receita} from "./types/receitaDespesaTypes.ts";
 
-interface Receita {
-    modeloReceita: string; // Ex.: SaaS, Consultoria
-    tipoReceita: string; // Ex.: Inbound, Outbound
-    descricao: string; // Descrição da receita
-    ticketMedio: number; // Valor médio por cliente
-    cac: number; // Custo de Aquisição de Cliente
-    investimentoMkt: number; // Investimento em Marketing
-    conversaoInbound: number; // Taxa de Conversão Inbound
-    vendasInbound: number; // Número de Vendas Inbound
-    clientesTotais: number; // Total de Clientes Ativos
-    cancelamento: number; // Taxa de Cancelamento (Churn)
-    consultorias: number; // Quantidade de Consultorias
-    ticketMedioConsultorias: number; // Ticket Médio das Consultorias
-    receitaBrutaTotal: number; // Receita Bruta Total
-    comissoes: number; // Comissões (ex: 5%)
-}
-
-interface Despesa {
-    descricao: string; // Ex.: AWS, SG&A, Vendedores
-    tipoDespesa: string; // Ex.: Fixa, Variável
-    valor: number; // Valor da Despesa
-    comissoes: number; // Comissões (ex: 5%)
-    cmv: number; // Custo das Mercadorias Vendidas
-}
-
-interface DreAnualRequest {
-    ano: number;
-    receitas: Receita[];
-    despesas: Despesa[];
-    cmv: number;
-    depreciacao: number;
-    taxaImposto: number;
-}
 
 const CadServico = () => {
     const navigate = useNavigate();
@@ -158,7 +124,6 @@ const CadServico = () => {
         };
 
          // Função de importação do CSV
-        
 
         setDreAnualRequests([...dreAnualRequests, novoDreAnual]);
 
@@ -178,45 +143,7 @@ const CadServico = () => {
     };
 
     const handleImportCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-    
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const text = reader.result as string;
-                const rows = text.split("\n");
-    
-                // Processamento do CSV
-                const data: DreAnualRequest = {
-                    ano: parseInt(rows[0].trim()) || 0, 
-                    cmv: parseFloat(rows[1].trim()) || 0, 
-                    depreciacao: parseFloat(rows[2].trim()) || 0, 
-                    taxaImposto: parseFloat(rows[3].trim()) || 0,
-                    receitas: [],  
-                    despesas: [] 
-                };
-    
-                // Atualiza os estados com os valores extraídos do CSV
-                setNovoAno(data.ano.toString());
-                setCmv(data.cmv.toString());
-                setDepreciacao(data.depreciacao.toString());
-                setTaxaImposto(data.taxaImposto.toString());
-    
-                // Atualiza a lista de anos com o novo dado importado
-                setDreAnualRequests(prevState => [...prevState, data]);
-    
-                toast({
-                    title: "Sucesso",
-                    description: "Arquivo CSV importado com sucesso!",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                });
-            };
-            reader.readAsText(file);
-        }
     };
-    
 
     // Função para remover um ano
     const handleRemoveAno = (ano: number) => {
@@ -423,7 +350,7 @@ const CadServico = () => {
                                 min={0}
                                 max={100}
                                 step={0.01}
-                                value={parseFloat(taxaImposto)}
+                                value={taxaImposto}
                                 onChange={(valueString) => setTaxaImposto(valueString)}
                             >
                                 <NumberInputField placeholder="Taxa de Imposto" bg="white" size="lg" />
