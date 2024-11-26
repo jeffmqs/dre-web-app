@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Box, Text, Heading, VStack, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from "@chakra-ui/react";
+import { Box, Text, Heading, VStack, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger } from "@chakra-ui/react";
+import { FaInfoCircle } from "react-icons/fa";
 
 type ResultData = {
   valorPresenteLiquido: number;
@@ -153,15 +154,80 @@ const ResultPage = () => {
       {/* Seção de Valuation */}
       <VStack spacing={4} w="90%" mb={8}>
         <Box p={4} borderWidth={1} borderRadius="md" w="100%">
-          <Text fontSize="lg" fontWeight="bold">Valor Presente Líquido:</Text>
+          <Box display="flex" alignItems="center">
+            <Text fontSize="lg" fontWeight="bold">Valor Presente Líquido:</Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  size="sm"
+                  icon={<FaInfoCircle />}
+                  aria-label="Informação sobre Valor Presente Líquido"
+                  ml={2}
+                  color="gray.500"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Valor Presente Líquido</PopoverHeader>
+                <PopoverBody>
+                  O Valor Presente Líquido (VPL) representa o valor atual de um fluxo de caixa futuro descontado por uma taxa de desconto.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
           <Text fontSize="md">R$ {resultData.valorPresenteLiquido.toFixed(2)}</Text>
         </Box>
+
         <Box p={4} borderWidth={1} borderRadius="md" w="100%">
-          <Text fontSize="lg" fontWeight="bold">Valor Terminal:</Text>
+          <Box display="flex" alignItems="center">
+            <Text fontSize="lg" fontWeight="bold">Valor Terminal:</Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  size="sm"
+                  icon={<FaInfoCircle />}
+                  aria-label="Informação sobre Valor Terminal"
+                  ml={2}
+                  color="gray.500"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Valor Terminal</PopoverHeader>
+                <PopoverBody>
+                  O Valor Terminal estima o valor de um negócio após o período de projeção, baseando-se no crescimento contínuo.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
           <Text fontSize="md">R$ {resultData.valorTerminal.toFixed(2)}</Text>
         </Box>
+
         <Box p={4} borderWidth={1} borderRadius="md" w="100%">
-          <Text fontSize="lg" fontWeight="bold">Valuation Total:</Text>
+          <Box display="flex" alignItems="center">
+            <Text fontSize="lg" fontWeight="bold">Valuation Total:</Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  size="sm"
+                  icon={<FaInfoCircle />}
+                  aria-label="Informação sobre Valuation Total"
+                  ml={2}
+                  color="gray.500"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Valuation Total</PopoverHeader>
+                <PopoverBody>
+                  O Valuation Total é a soma do Valor Presente Líquido e do Valor Terminal.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
           <Text fontSize="md">R$ {resultData.valuationTotal.toFixed(2)}</Text>
         </Box>
       </VStack>
@@ -180,64 +246,80 @@ const ResultPage = () => {
             </h2>
             <AccordionPanel pb={4}>
               <Box mb={4}>
-                <Text fontWeight="bold">Receita Líquida:</Text>
+                <Box display="flex" alignItems="center">
+                  <Text fontWeight="bold">Receita Líquida:</Text>
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton
+                        size="sm"
+                        icon={<FaInfoCircle />}
+                        aria-label="Informação sobre Receita Líquida"
+                        ml={2}
+                        color="gray.500"
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Receita Líquida</PopoverHeader>
+                      <PopoverBody>
+                        A Receita Líquida é o total das receitas da empresa, subtraídos impostos e devoluções.
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Box>
                 <Text>R$ {dre.receitaLiquida.toFixed(2)}</Text>
               </Box>
               <Box mb={4}>
-                <Text fontWeight="bold">EBITDA:</Text>
+                <Box display="flex" alignItems="center">
+                  <Text fontWeight="bold">EBITDA:</Text>
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton
+                        size="sm"
+                        icon={<FaInfoCircle />}
+                        aria-label="Informação sobre EBITDA"
+                        ml={2}
+                        color="gray.500"
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>EBITDA</PopoverHeader>
+                      <PopoverBody>
+                        EBITDA é o lucro antes de juros, impostos, depreciação e amortização.
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Box>
                 <Text>R$ {dre.ebitda.toFixed(2)}</Text>
               </Box>
               <Box mb={4}>
-                <Text fontWeight="bold">Lucro Líquido:</Text>
+                <Box display="flex" alignItems="center">
+                  <Text fontWeight="bold">Lucro Líquido:</Text>
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton
+                        size="sm"
+                        icon={<FaInfoCircle />}
+                        aria-label="Informação sobre Lucro Líquido"
+                        ml={2}
+                        color="gray.500"
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Lucro Líquido</PopoverHeader>
+                      <PopoverBody>
+                        O Lucro Líquido é o resultado final, após deduzir todos os custos e despesas.
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Box>
                 <Text>R$ {dre.lucroLiquido.toFixed(2)}</Text>
               </Box>
-
-              {/* Sub-accordion para receitas */}
-              <Accordion allowMultiple>
-                <AccordionItem>
-                  <h2>
-                    <AccordionButton>
-                      <Box flex="1" textAlign="left" fontWeight="bold">
-                        Receitas
-                      </Box>
-                      <AccordionIcon />
-                    </AccordionButton>
-                  </h2>
-                  <AccordionPanel>
-                    {dre.receitas.map((receita, idx) => (
-                      <Box key={idx} mb={4} p={2} borderWidth={1} borderRadius="md">
-                        <Text><strong>Descrição:</strong> {receita.descricao}</Text>
-                        <Text><strong>Modelo:</strong> {receita.modeloReceita}</Text>
-                        <Text><strong>Tipo:</strong> {receita.tipoReceita}</Text>
-                        <Text><strong>Receita Bruta Total:</strong> R$ {receita.receitaBrutaTotal.toFixed(2)}</Text>
-                      </Box>
-                    ))}
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
-
-              {/* Sub-accordion para despesas */}
-              <Accordion allowMultiple mt={4}>
-                <AccordionItem>
-                  <h2>
-                    <AccordionButton>
-                      <Box flex="1" textAlign="left" fontWeight="bold">
-                        Despesas
-                      </Box>
-                      <AccordionIcon />
-                    </AccordionButton>
-                  </h2>
-                  <AccordionPanel>
-                    {dre.despesas.map((despesa, idx) => (
-                      <Box key={idx} mb={4} p={2} borderWidth={1} borderRadius="md">
-                        <Text><strong>Descrição:</strong> {despesa.descricao}</Text>
-                        <Text><strong>Tipo:</strong> {despesa.tipoDespesa}</Text>
-                        <Text><strong>Valor:</strong> R$ {despesa.valor.toFixed(2)}</Text>
-                      </Box>
-                    ))}
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
             </AccordionPanel>
           </AccordionItem>
         ))}
