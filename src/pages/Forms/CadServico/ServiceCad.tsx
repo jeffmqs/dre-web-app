@@ -3,26 +3,34 @@
 import React, { useState, useEffect } from "react";
 import {
     Box,
-    VStack,
-    Text,
-    Heading,
     Button,
-    Icon,
-    HStack,
-    SimpleGrid,
-    FormLabel,
+    Divider,
     FormControl,
+    FormLabel,
+    HStack,
+    Heading,
     NumberInput,
     NumberInputField,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
+    SimpleGrid,
+    Text,
+    VStack,
+    Icon,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverHeader,
+    PopoverBody,
+    PopoverArrow,
+    PopoverCloseButton,
     AccordionIcon,
-    Divider,
+    Accordion,
+    AccordionButton,
+    AccordionItem,
+    AccordionPanel,
     useToast,
+    IconButton,
 } from "@chakra-ui/react";
-import { FaArrowLeft, FaPlus, FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaPlus, FaTrash, FaInfoCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import DespesaForm from "./DespesaForm";
 import ReceitaForm from "./ReceitaForm";
@@ -327,8 +335,28 @@ const CadServico = () => {
                             </NumberInput>
                         </FormControl>
 
+                        {/* Campo CMV com Popover */}
                         <FormControl>
-                            <FormLabel>CMV (R$)</FormLabel>
+                            <FormLabel display="flex" alignItems="center">
+                                CMV (R$)
+                                <Popover placement='right' closeOnBlur={true} trigger="hover">
+                                    <PopoverTrigger>
+                                    <IconButton size='sm' icon={<FaInfoCircle />} aria-label={""}
+                                    color="gray.500"
+                                    ml={2}
+                                    boxSize="16px"
+                                    cursor="pointer" />
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <PopoverArrow />
+                                        <PopoverCloseButton />
+                                        <PopoverHeader>CMV (Custo das Mercadorias Vendidas)</PopoverHeader>
+                                        <PopoverBody>
+                                            CMV representa o custo de produção ou aquisição das mercadorias ou serviços vendidos pela empresa.
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
+                            </FormLabel>
                             <NumberInput
                                 min={0}
                                 value={cmv}
@@ -338,8 +366,28 @@ const CadServico = () => {
                             </NumberInput>
                         </FormControl>
 
+                        {/* Campo Depreciação com Popover */}
                         <FormControl>
-                            <FormLabel>Depreciação (R$)</FormLabel>
+                            <FormLabel display="flex" alignItems="center">
+                                Depreciação (R$)
+                                <Popover placement='right' closeOnBlur={true} trigger="hover">
+                                    <PopoverTrigger>
+                                    <IconButton size='sm' icon={<FaInfoCircle />} aria-label={""}
+                                    color="gray.500"
+                                    ml={2}
+                                    boxSize="16px"
+                                    cursor="pointer" />
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <PopoverArrow />
+                                        <PopoverCloseButton />
+                                        <PopoverHeader>Depreciação</PopoverHeader>
+                                        <PopoverBody>
+                                            Depreciação é um recurso contábil que representa a perda produtiva de um equipamento, seja por desgaste ou ação do tempo.
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
+                            </FormLabel>
                             <NumberInput
                                 min={0}
                                 value={depreciacao}
@@ -349,8 +397,28 @@ const CadServico = () => {
                             </NumberInput>
                         </FormControl>
 
+                        {/* Campo Taxa de Imposto com Popover */}
                         <FormControl>
-                            <FormLabel>Taxa de Imposto (%)</FormLabel>
+                            <FormLabel display="flex" alignItems="center">
+                                Taxa de Imposto (%)
+                                <Popover placement='right' closeOnBlur={true} trigger="hover">
+                                    <PopoverTrigger>
+                                    <IconButton size='sm' icon={<FaInfoCircle />} aria-label={""}
+                                    color="gray.500"
+                                    ml={2}
+                                    boxSize="16px"
+                                    cursor="pointer" />
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <PopoverArrow />
+                                        <PopoverCloseButton />
+                                        <PopoverHeader>Taxa de Imposto</PopoverHeader>
+                                        <PopoverBody>
+                                            A Taxa de Imposto é a porcentagem que a empresa deve pagar de impostos sobre o lucro.
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
+                            </FormLabel>
                             <NumberInput
                                 min={0}
                                 max={100}
@@ -376,7 +444,6 @@ const CadServico = () => {
                         </Button>
 
                         <Button
-                            
                             color="black"
                             bg="#C6FF06"
                             _hover={{ bg: "#b8f306" }}
@@ -430,7 +497,7 @@ const CadServico = () => {
                                                     <strong>Depreciação:</strong> R$ {dre.depreciacao.toFixed(2)}
                                                 </Text>
                                                 <Text>
-                                                    <strong>Taxa de Imposto:</strong> {dre.taxaImposto * 100}%
+                                                    <strong>Taxa de Imposto:</strong> {dre.taxaImposto}%
                                                 </Text>
                                             </HStack>
 
