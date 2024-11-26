@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button, FormControl, FormLabel, Input, NumberInput, NumberInputField, VStack, useToast } from "@chakra-ui/react";
-import { FaPlus } from "react-icons/fa";
+import { Box, Button, FormControl, FormLabel, IconButton, Input, NumberInput, NumberInputField, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, VStack, useToast } from "@chakra-ui/react";
+import { FaInfoCircle, FaPlus } from "react-icons/fa";
 import { Receita } from "../CadServico/types/receitaDespesaTypes";
 
 interface ReceitaFormProps {
@@ -97,168 +97,195 @@ const ReceitaForm: React.FC<ReceitaFormProps> = ({ ano, onAddReceita }) => {
             isClosable: true,
         });
     };
+    const renderFieldWithPopover = (
+        label: string,
+        placeholder: string,
+        value: string | number,
+        onChange: (value: string) => void,
+        explanation: string,
+        isNumberInput?: boolean,
+        numberProps?: { min?: number; max?: number; step?: number }
+      ) => {
+        return (
+          <FormControl>
+            <Box display="flex" alignItems="center">
+              <FormLabel mb={0}>{label}</FormLabel>
+              <Popover placement="right" closeOnBlur={true} trigger="hover">
+                <PopoverTrigger>
+                  <IconButton
+                    size="sm"
+                    icon={<FaInfoCircle />}
+                    aria-label={`Informação sobre ${label}`}
+                    color="gray.500"
+                    ml={2}
+                    boxSize="16px"
+                    cursor="pointer"
+                  />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>{label}</PopoverHeader>
+                  <PopoverBody>{explanation}</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Box>
+            {isNumberInput ? (
+              <NumberInput
+                value={value}
+                onChange={(valueString) => onChange(valueString)}
+                {...numberProps}
+              >
+                <NumberInputField placeholder={placeholder} bg="white" size="lg" />
+              </NumberInput>
+            ) : (
+              <Input
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                bg="white"
+                size="lg"
+              />
+            )}
+          </FormControl>
+        );
+      };
 
     return (
         <VStack spacing={4} align="stretch">
-            <FormControl>
-                <FormLabel>Modelo Receita</FormLabel>
-                <Input
-                    placeholder="Ex.: SaaS, Consultoria"
-                    value={modeloReceita}
-                    onChange={(e) => setModeloReceita(e.target.value)}
-                    bg="white"
-                    size="lg"
-                />
-            </FormControl>
-            <FormControl>
-                <FormLabel>Tipo Receita</FormLabel>
-                <Input
-                    placeholder="Ex.: Inbound, Outbound"
-                    value={tipoReceita}
-                    onChange={(e) => setTipoReceita(e.target.value)}
-                    bg="white"
-                    size="lg"
-                />
-            </FormControl>
-            <FormControl>
-                <FormLabel>Descrição</FormLabel>
-                <Input
-                    placeholder="Descrição da receita"
-                    value={descricao}
-                    onChange={(e) => setDescricao(e.target.value)}
-                    bg="white"
-                    size="lg"
-                />
-            </FormControl>
-            <FormControl>
-                <FormLabel>Ticket Médio (R$)</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={ticketMedio}
-                    onChange={(valueString) => setTicketMedio(valueString)}
-                >
-                    <NumberInputField placeholder="Valor médio por cliente" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>CAC (R$)</FormLabel>
-                <NumberInput min={0} value={cac} onChange={(valueString) => setCac(valueString)}>
-                    <NumberInputField placeholder="Custo de Aquisição de Cliente" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Investimento em Marketing (R$)</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={investimentoMkt}
-                    onChange={(valueString) => setInvestimentoMkt(valueString)}
-                >
-                    <NumberInputField placeholder="Investimento em Marketing" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Conversão Inbound (%)</FormLabel>
-                <NumberInput
-                    min={0}
-                    max={100}
-                    step={0.01}
-                    value={conversaoInbound}
-                    onChange={(valueString) => setConversaoInbound(valueString)}
-                >
-                    <NumberInputField placeholder="Taxa de Conversão Inbound" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Vendas Inbound</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={vendasInbound}
-                    onChange={(valueString) => setVendasInbound(valueString)}
-                >
-                    <NumberInputField placeholder="Número de Vendas Inbound" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Clientes Totais</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={clientesTotais}
-                    onChange={(valueString) => setClientesTotais(valueString)}
-                >
-                    <NumberInputField placeholder="Total de Clientes Ativos" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Cancelamento (%)</FormLabel>
-                <NumberInput
-                    min={0}
-                    max={100}
-                    step={0.01}
-                    value={cancelamento}
-                    onChange={(valueString) => setCancelamento(valueString)}
-                >
-                    <NumberInputField placeholder="Taxa de Cancelamento (Churn)" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Consultorias</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={consultorias}
-                    onChange={(valueString) => setConsultorias(valueString)}
-                >
-                    <NumberInputField placeholder="Quantidade de Consultorias" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Ticket Médio Consultorias (R$)</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={ticketMedioConsultorias}
-                    onChange={(valueString) => setTicketMedioConsultorias(valueString)}
-                >
-                    <NumberInputField
-                        placeholder="Ticket Médio das Consultorias"
-                        bg="white"
-                        size="lg"
-                    />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Receita Bruta Total (R$)</FormLabel>
-                <NumberInput
-                    min={0}
-                    value={receitaBrutaTotal}
-                    onChange={(valueString) => setReceitaBrutaTotal(valueString)}
-                >
-                    <NumberInputField placeholder="Receita Bruta Total" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <FormControl>
-                <FormLabel>Comissões (%)</FormLabel>
-                <NumberInput
-                    min={0}
-                    max={100}
-                    step={0.01}
-                    value={comissoes}
-                    onChange={(valueString) => setComissoes(valueString)}
-                >
-                    <NumberInputField placeholder="Comissões (ex: 5%)" bg="white" size="lg" />
-                </NumberInput>
-            </FormControl>
-            <Button
-                leftIcon={<FaPlus />}
-                color="black"
-                bg="#C6FF06"
-                _hover={{ bg: "#b8f306" }}
-                variant="solid"
-                onClick={handleAdd}
-                size="sm"
-            >
-                Adicionar Receita
-            </Button>
+          {renderFieldWithPopover(
+            "Modelo Receita",
+            "Ex.: SaaS, Consultoria",
+            modeloReceita,
+            setModeloReceita,
+            "Modelo de receita descreve o tipo de negócio, como SaaS, consultoria ou vendas diretas."
+          )}
+          {renderFieldWithPopover(
+            "Tipo Receita",
+            "Ex.: Inbound, Outbound",
+            tipoReceita,
+            setTipoReceita,
+            "O tipo de receita descreve a origem da receita, como vendas inbound (clientes entrando) ou outbound (vendas ativas)."
+          )}
+          {renderFieldWithPopover(
+            "Descrição",
+            "Descrição da receita",
+            descricao,
+            setDescricao,
+            "Uma breve descrição detalhando a receita ou a origem dela."
+          )}
+          {renderFieldWithPopover(
+            "Ticket Médio (R$)",
+            "Valor médio por cliente",
+            ticketMedio,
+            setTicketMedio,
+            "Ticket médio é o valor médio gasto por cliente.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "CAC (R$)",
+            "Custo de Aquisição de Cliente",
+            cac,
+            setCac,
+            "Custo de Aquisição de Cliente é quanto custa para conquistar um cliente.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Investimento em Marketing (R$)",
+            "Investimento em Marketing",
+            investimentoMkt,
+            setInvestimentoMkt,
+            "O valor gasto em campanhas de marketing para atrair clientes.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Conversão Inbound (%)",
+            "Taxa de Conversão Inbound",
+            conversaoInbound,
+            setConversaoInbound,
+            "Taxa que mede quantos clientes potenciais se tornam efetivos, vindo de ações inbound.",
+            true,
+            { min: 0, max: 100, step: 0.01 }
+          )}
+          {renderFieldWithPopover(
+            "Vendas Inbound",
+            "Número de Vendas Inbound",
+            vendasInbound,
+            setVendasInbound,
+            "Número total de vendas realizadas por inbound.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Clientes Totais",
+            "Total de Clientes Ativos",
+            clientesTotais,
+            setClientesTotais,
+            "Número total de clientes ativos na empresa.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Cancelamento (%)",
+            "Taxa de Cancelamento (Churn)",
+            cancelamento,
+            setCancelamento,
+            "Taxa de cancelamento ou churn mostra quantos clientes deixam de ser ativos.",
+            true,
+            { min: 0, max: 100, step: 0.01 }
+          )}
+          {renderFieldWithPopover(
+            "Consultorias",
+            "Quantidade de Consultorias",
+            consultorias,
+            setConsultorias,
+            "Número de consultorias realizadas pela empresa.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Ticket Médio Consultorias (R$)",
+            "Ticket Médio das Consultorias",
+            ticketMedioConsultorias,
+            setTicketMedioConsultorias,
+            "O valor médio recebido por consultoria realizada.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Receita Bruta Total (R$)",
+            "Receita Bruta Total",
+            receitaBrutaTotal,
+            setReceitaBrutaTotal,
+            "Receita bruta total acumulada pela empresa.",
+            true,
+            { min: 0 }
+          )}
+          {renderFieldWithPopover(
+            "Comissões (%)",
+            "Comissões (ex: 5%)",
+            comissoes,
+            setComissoes,
+            "Porcentagem média paga como comissão pelas vendas.",
+            true,
+            { min: 0, max: 100, step: 0.01 }
+          )}
+          <Button
+            leftIcon={<FaPlus />}
+            color="black"
+            bg="#C6FF06"
+            _hover={{ bg: "#b8f306" }}
+            variant="solid"
+            onClick={handleAdd}
+            size="sm"
+          >
+            Adicionar Receita
+          </Button>
         </VStack>
-    );
-};
-
-export default ReceitaForm;
+      );
+    };
+    
+    export default ReceitaForm;
