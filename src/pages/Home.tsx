@@ -1,15 +1,16 @@
 import { Box, Button, Heading, Grid, GridItem, Stack } from "@chakra-ui/react";
 import { FaCommentsDollar, FaChartLine, FaChartPie, FaRegQuestionCircle } from "react-icons/fa";
 import { GiSellCard } from "react-icons/gi";
-import { LuDollarSign } from "react-icons/lu";
-import { LuCalendarClock } from "react-icons/lu";
+import { LuDollarSign, LuCalendarClock } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 interface ServiceButtonProps {
   icon: JSX.Element;
   label: string;
+  onClick?: () => void; // Add onClick prop
 }
 
-const ServiceButton: React.FC<ServiceButtonProps> = ({ icon, label }) => {
+const ServiceButton: React.FC<ServiceButtonProps> = ({ icon, label, onClick }) => {
   return (
     <Button
       w="full"
@@ -21,6 +22,7 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({ icon, label }) => {
       borderRadius="md"
       fontWeight="light"
       fontSize="sm"
+      onClick={onClick} // Attach onClick prop
     >
       <Stack direction="column" align="center" spacing={4}>
         {icon}
@@ -31,6 +33,8 @@ const ServiceButton: React.FC<ServiceButtonProps> = ({ icon, label }) => {
 };
 
 export const Home = () => {
+  const navigate = useNavigate(); // Hook for navigation
+
   return (
     <Box bg="#F0F0F0" minH="100vh" p={8}>
       <Box
@@ -70,7 +74,11 @@ export const Home = () => {
           gap={6}
         >         
           <GridItem>
-            <ServiceButton icon={<LuDollarSign size={30} />} label="Calcular Valuation"/>
+            <ServiceButton 
+              icon={<LuDollarSign size={30} />} 
+              label="Calcular Valuation" 
+              onClick={() => navigate("/serviceCad")} // Navigate to /serviceCad
+            />
           </GridItem>
           <GridItem>
             <ServiceButton icon={<LuCalendarClock size={30} />} label="Histórico Financeiro" />

@@ -12,68 +12,76 @@ import {
   Link,
   Alert,
   AlertIcon,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 const Signup = () => {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(""); 
-  const navigate = useNavigate(); 
+  const [error, setError] = useState(""); // Add missing state
+  const navigate = useNavigate();
+  const toast = useToast();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-   
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("O e-mail deve ser válido e conter '.com'.");
-      return;
-    }
-
-    
-    const passwordRegex = /^(?=.*[A-Za-z]).{6,}$/;
-    if (!passwordRegex.test(password)) {
-      setError("A senha deve ter pelo menos 6 caracteres, e que ao menos uma letra (minúscula ou maiúscula) esteja presente.");
-      return;
-    }
-
+    // Check if passwords match
     if (password !== confirmPassword) {
-      alert("As senhas não coincidem. Por favor, tente novamente.");
+      setError("As senhas não coincidem.");
       return;
     }
 
-    setError("");
-    navigate("/complete-registration", { state: { username, email } });
-  };
+    try {
+      // Reset error state before attempting API call
+      setError("");
 
-  const handleLoginRedirect = () => {
-    navigate("/"); 
+      const response = await axios.post("http://localhost:8080/auth/register", {
+        nome: name,
+        email,
+        senha: password,
+      });
+
+      toast({
+        title: "Cadastro bem-sucedido!",
+        description: "Sua conta foi criada com sucesso.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      navigate("/");
+    } catch (err: any) {
+      // Set error message from response or default
+      setError(err.response?.data || "Erro desconhecido.");
+    }
   };
 
   return (
-    <Box 
-      minHeight="100vh" 
-      display="flex" 
-      alignItems="center" 
-      justifyContent="center" 
-      bgImage="url('/bg.png')" 
-      bgSize="cover" 
+    <Box
+      minHeight="100vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      bgImage="url('/bg.png')"
+      bgSize="cover"
       bgPosition="center"
     >
-      <Box 
-        width="450px" 
-        bg="rgba(255, 255, 255, 0.15)" 
-        backdropFilter="blur(10px)" 
-        border="2px solid rgba(255, 255, 255, 0.2)" 
-        p={8} 
+      <Box
+        width="450px"
+        bg="rgba(255, 255, 255, 0.15)"
+        backdropFilter="blur(10px)"
+        border="2px solid rgba(255, 255, 255, 0.2)"
+        p={8}
         borderRadius="10px"
       >
         <Heading as="h2" size="lg" textAlign="center" color="white" mb={6}>
           Crie sua conta
         </Heading>
 
+        {/* Show error alert if an error exists */}
         {error && (
           <Alert status="error" mb={4}>
             <AlertIcon />
@@ -87,7 +95,7 @@ const Signup = () => {
               <Input
                 type="text"
                 placeholder="Digite seu nome"
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 required
                 bg="transparent"
                 border="2px solid rgba(255, 255, 255, 0.2)"
@@ -96,7 +104,15 @@ const Signup = () => {
                 p="20px 25px"
                 _placeholder={{ color: "white" }}
               />
-              <Icon as={FaUser} position="absolute" right="25px" top="50%" transform="translateY(-50%)" fontSize="18px" color="white" />
+              <Icon
+                as={FaUser}
+                position="absolute"
+                right="25px"
+                top="50%"
+                transform="translateY(-50%)"
+                fontSize="18px"
+                color="white"
+              />
             </Box>
 
             <Box position="relative" width="100%">
@@ -112,7 +128,15 @@ const Signup = () => {
                 p="20px 25px"
                 _placeholder={{ color: "white" }}
               />
-              <Icon as={FaEnvelope} position="absolute" right="25px" top="50%" transform="translateY(-50%)" fontSize="18px" color="white" />
+              <Icon
+                as={FaEnvelope}
+                position="absolute"
+                right="25px"
+                top="50%"
+                transform="translateY(-50%)"
+                fontSize="18px"
+                color="white"
+              />
             </Box>
 
             <Box position="relative" width="100%">
@@ -128,9 +152,17 @@ const Signup = () => {
                 p="20px 25px"
                 _placeholder={{ color: "white" }}
               />
-              <Icon as={FaLock} position="absolute" right="25px" top="50%" transform="translateY(-50%)" fontSize="18px" color="white" />
+              <Icon
+                as={FaLock}
+                position="absolute"
+                right="25px"
+                top="50%"
+                transform="translateY(-50%)"
+                fontSize="18px"
+                color="white"
+              />
             </Box>
-            
+
             <Box position="relative" width="100%">
               <Input
                 type="password"
@@ -144,23 +176,35 @@ const Signup = () => {
                 p="20px 25px"
                 _placeholder={{ color: "white" }}
               />
-              <Icon as={FaLock} position="absolute" right="25px" top="50%" transform="translateY(-50%)" fontSize="18px" color="white" />
+              <Icon
+                as={FaLock}
+                position="absolute"
+                right="25px"
+                top="50%"
+                transform="translateY(-50%)"
+                fontSize="18px"
+                color="white"
+              />
             </Box>
-          
-            <Button 
-              type="submit" 
-              width="full" 
-              height="50px" 
-              bg="white" 
-              borderRadius="40px" 
+
+            <Button
+              type="submit"
+              width="full"
+              height="50px"
+              bg="white"
+              borderRadius="40px"
               _hover={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)" }}
             >
               Cadastrar
             </Button>
-            
+
             <Text color="white" textAlign="center" mt={6}>
               Já tem uma conta?{" "}
-              <Link color="white" _hover={{ textDecoration: "underline" }} onClick={handleLoginRedirect}>
+              <Link
+                color="white"
+                _hover={{ textDecoration: "underline" }}
+                onClick={() => navigate("/login")}
+              >
                 Entrar
               </Link>
             </Text>
