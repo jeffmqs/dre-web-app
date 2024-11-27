@@ -37,3 +37,11 @@ Notas Importantes:
 Colunas para depreciacao e taxaImposto: Essas linhas devem conter apenas o ano, o tipo e os valores correspondentes, deixando as demais colunas vazias.
 Valores Numéricos: Certifique-se de que os valores numéricos estejam no formato correto (sem caracteres especiais, vírgulas como separadores decimais, etc.).
 Consistência: Cada ano deve conter linhas suficientes para preencher receitas, despesas, depreciação e taxa de imposto.
+
+
+Como o arquivo de Exportação Excel será gerado:
+O arquivo gerado terá uma aba de Valuation com os dados de valuation.
+Para cada ano de dreAnualList, o arquivo terá 3 abas:
+Uma aba com as receitas desse ano.
+Uma aba com as despesas desse ano.
+Uma aba com os dados financeiros gerais desse ano.

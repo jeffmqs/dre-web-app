@@ -1,35 +1,8 @@
 import { useEffect, useState } from "react";
-import { Box, Text, Heading, VStack, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger } from "@chakra-ui/react";
+import { Box, Text, Heading, VStack, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Button } from "@chakra-ui/react";
 import { FaInfoCircle } from "react-icons/fa";
-
-type ResultData = {
-  valorPresenteLiquido: number;
-  valorTerminal: number;
-  valuationTotal: number;
-};
-
-type Receita = {
-  descricao: string;
-  modeloReceita: string;
-  tipoReceita: string;
-  receitaBrutaTotal: number;
-};
-
-type Despesa = {
-  descricao: string;
-  tipoDespesa: string;
-  valor: number;
-  cmv: number;
-};
-
-type DreAnual = {
-  ano: number;
-  receitas: Receita[];
-  despesas: Despesa[];
-  receitaLiquida: number;
-  ebitda: number;
-  lucroLiquido: number;
-};
+import { exportToExcel, exportToCSV } from '../../pages/valuation/functions/exportUtils';
+import { ResultData, DreAnual } from '../valuation/types/types';
 
 const ResultPage = () => {
     const [resultData, setResultData] = useState<ResultData | null>(null);
@@ -87,6 +60,7 @@ const ResultPage = () => {
           setLoading(false);
         });
     }, []);
+      
   
     if (loading) {
       return (
@@ -136,7 +110,6 @@ const ResultPage = () => {
         </Box>
       );
     }
-
   return (
     <Box
       minHeight="100vh"
@@ -148,11 +121,11 @@ const ResultPage = () => {
       p={4}
     >
       <Heading as="h2" size="lg" textAlign="center" color="black" mb={6} mt={10}>
-        Resultado do Valuation e DRE
+        Resultado do Valuation 
       </Heading>
 
       {/* Seção de Valuation */}
-      <VStack spacing={4} w="90%" mb={8}>
+      <VStack spacing={4} w="90%" mb={4}>
         <Box p={4} borderWidth={1} borderRadius="md" w="100%">
           <Box display="flex" alignItems="center">
             <Text fontSize="lg" fontWeight="bold">Valor Presente Líquido:</Text>
@@ -231,99 +204,154 @@ const ResultPage = () => {
           <Text fontSize="md">R$ {resultData.valuationTotal.toFixed(2)}</Text>
         </Box>
       </VStack>
-
+      <Heading as="h2" size="lg" textAlign="center" color="black" mb={6} mt={1}>
+        Resultado do DRE
+      </Heading>
       {/* Seção de DRE */}
       <Accordion allowMultiple w="90%" mb={8}>
-        {dreAnualList.map((dre, index) => (
-          <AccordionItem key={index}>
-            <h2>
+  {dreAnualList.map((dre, index) => (
+    <AccordionItem key={index}>
+      <h2>
+        <AccordionButton>
+          <Box flex="1" textAlign="left" fontWeight="bold">
+            Ano: {dre.ano}
+          </Box>
+          <AccordionIcon />
+        </AccordionButton>
+      </h2>
+      <AccordionPanel pb={4}>
+        {/* Receita Líquida */}
+        <Box mb={4}>
+          <Box display="flex" alignItems="center">
+            <Text fontWeight="bold">Receita Líquida:</Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  size="sm"
+                  icon={<FaInfoCircle />}
+                  aria-label="Informação sobre Receita Líquida"
+                  ml={2}
+                  color="gray.500"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Receita Líquida</PopoverHeader>
+                <PopoverBody>
+                  A Receita Líquida é o total das receitas da empresa, subtraídos impostos e devoluções.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+          <Text>R$ {dre.receitaLiquida.toFixed(2)}</Text>
+        </Box>
+        
+        {/* EBITDA */}
+        <Box mb={4}>
+          <Box display="flex" alignItems="center">
+            <Text fontWeight="bold">EBITDA:</Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  size="sm"
+                  icon={<FaInfoCircle />}
+                  aria-label="Informação sobre EBITDA"
+                  ml={2}
+                  color="gray.500"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>EBITDA</PopoverHeader>
+                <PopoverBody>
+                  EBITDA é o lucro antes de juros, impostos, depreciação e amortização.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+          <Text>R$ {dre.ebitda.toFixed(2)}</Text>
+        </Box>
+        
+        {/* Lucro Líquido */}
+        <Box mb={4}>
+          <Box display="flex" alignItems="center">
+            <Text fontWeight="bold">Lucro Líquido:</Text>
+            <Popover>
+              <PopoverTrigger>
+                <IconButton
+                  size="sm"
+                  icon={<FaInfoCircle />}
+                  aria-label="Informação sobre Lucro Líquido"
+                  ml={2}
+                  color="gray.500"
+                />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Lucro Líquido</PopoverHeader>
+                <PopoverBody>
+                  O Lucro Líquido é o resultado final, após deduzir todos os custos e despesas.
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </Box>
+          <Text>R$ {dre.lucroLiquido.toFixed(2)}</Text>
+        </Box>
+        
+        {/* Accordions para Receitas e Despesas */}
+        <Accordion allowMultiple >
+          {/* Receitas */}
+          <AccordionItem>
+            <h3>
               <AccordionButton>
                 <Box flex="1" textAlign="left" fontWeight="bold">
-                  Ano: {dre.ano}
+                  Receitas
                 </Box>
                 <AccordionIcon />
               </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <Box mb={4}>
-                <Box display="flex" alignItems="center">
-                  <Text fontWeight="bold">Receita Líquida:</Text>
-                  <Popover>
-                    <PopoverTrigger>
-                      <IconButton
-                        size="sm"
-                        icon={<FaInfoCircle />}
-                        aria-label="Informação sobre Receita Líquida"
-                        ml={2}
-                        color="gray.500"
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Receita Líquida</PopoverHeader>
-                      <PopoverBody>
-                        A Receita Líquida é o total das receitas da empresa, subtraídos impostos e devoluções.
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
+            </h3>
+            <AccordionPanel>
+              {dre.receitas.map((receita, i) => (
+                <Box key={i} mb={4} p={3} borderWidth={1} borderRadius="md">
+                  <Text><b>Modelo Receita:</b> {receita.modeloReceita}</Text>
+                  <Text><b>Tipo Receita:</b> {receita.tipoReceita}</Text>
+                  <Text><b>Descrição:</b> {receita.descricao}</Text>
+                  <Text><b>Receita Bruta Total:</b> R$ {receita.receitaBrutaTotal.toFixed(2)}</Text>
                 </Box>
-                <Text>R$ {dre.receitaLiquida.toFixed(2)}</Text>
-              </Box>
-              <Box mb={4}>
-                <Box display="flex" alignItems="center">
-                  <Text fontWeight="bold">EBITDA:</Text>
-                  <Popover>
-                    <PopoverTrigger>
-                      <IconButton
-                        size="sm"
-                        icon={<FaInfoCircle />}
-                        aria-label="Informação sobre EBITDA"
-                        ml={2}
-                        color="gray.500"
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>EBITDA</PopoverHeader>
-                      <PopoverBody>
-                        EBITDA é o lucro antes de juros, impostos, depreciação e amortização.
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Box>
-                <Text>R$ {dre.ebitda.toFixed(2)}</Text>
-              </Box>
-              <Box mb={4}>
-                <Box display="flex" alignItems="center">
-                  <Text fontWeight="bold">Lucro Líquido:</Text>
-                  <Popover>
-                    <PopoverTrigger>
-                      <IconButton
-                        size="sm"
-                        icon={<FaInfoCircle />}
-                        aria-label="Informação sobre Lucro Líquido"
-                        ml={2}
-                        color="gray.500"
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverHeader>Lucro Líquido</PopoverHeader>
-                      <PopoverBody>
-                        O Lucro Líquido é o resultado final, após deduzir todos os custos e despesas.
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Box>
-                <Text>R$ {dre.lucroLiquido.toFixed(2)}</Text>
-              </Box>
+              ))}
             </AccordionPanel>
           </AccordionItem>
-        ))}
-      </Accordion>
+
+          {/* Despesas */}
+          <AccordionItem>
+            <h3>
+              <AccordionButton>
+                <Box flex="1" textAlign="left" fontWeight="bold">
+                  Despesas
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h3>
+            <AccordionPanel>
+              {dre.despesas.map((despesa, i) => (
+                <Box key={i} mb={4} p={3} borderWidth={1} borderRadius="md">
+                  <Text><b>Descrição:</b> {despesa.descricao}</Text>
+                  <Text><b>Tipo:</b> {despesa.tipoDespesa}</Text>
+                  <Text><b>Valor:</b> R$ {despesa.valor.toFixed(2)}</Text>
+                  <Text><b>CMV:</b> R$ {despesa.cmv.toFixed(2)}</Text>
+                </Box>
+              ))}
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </AccordionPanel>
+    </AccordionItem>
+  ))}
+</Accordion>
+
        {/* Seção de explicação */}
        <VStack spacing={6} w="90%" mb={8}>
                 <Box p={4} borderWidth={1} borderRadius="md" w="100%" bg="gray.100">
@@ -361,6 +389,26 @@ const ResultPage = () => {
                     </Text>
                 </Box>
             </VStack>
+           <Button 
+            mt={6}
+            bg="green.500"
+            color="white"
+            _hover={{ bg: "green.400" }}
+            size="lg"
+            width="50%"
+            onClick={() => exportToExcel(resultData, dreAnualList)}
+            >Exportar para Excel
+            </Button>
+            <Button 
+            mt={6}
+            bg="green.500"
+            color="white"
+            _hover={{ bg: "green.400" }}
+            size="lg"
+            width="50%"
+            onClick={() => exportToCSV(resultData, dreAnualList)} colorScheme="blue">
+                Exportar para CSV
+            </Button>
     </Box>
   );
 };
