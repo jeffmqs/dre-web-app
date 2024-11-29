@@ -124,10 +124,20 @@ const Login = () => {
           </Text>
         )}
         {serverStatus === "offline" && (
-          <Text textAlign="center" color="red.400" mb={4}>
-            O servidor está offline. Aguarde ou tente novamente mais tarde.
-          </Text>
-        )}
+  <Box textAlign="center" color="red.400" mb={4}>
+    <Text mb={4}>
+      O servidor está offline. Aguarde ou tente novamente mais tarde.
+    </Text>
+    <Button
+      onClick={() => navigate("/home")}
+      colorScheme="blue"
+      size="md"
+      borderRadius="20px"
+    >
+      Ir para a página inicial
+    </Button>
+  </Box>
+)}
         {serverStatus === "online" && (
           <>
             <Heading as="h2" size="lg" textAlign="center" color="white" mb={6}>
