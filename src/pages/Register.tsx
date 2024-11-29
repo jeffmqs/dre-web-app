@@ -21,29 +21,36 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(""); // Add missing state
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const toast = useToast();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Check if passwords match
+    // Validate password match
     if (password !== confirmPassword) {
       setError("As senhas não coincidem.");
       return;
     }
 
     try {
-      // Reset error state before attempting API call
+      // Reset error state before API call
       setError("");
 
-      const response = await axios.post("http://localhost:8080/auth/register", {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      if (!API_BASE_URL) {
+        throw new Error("VITE_API_BASE_URL não está definido.");
+      }
+
+      // Send registration data to the server
+      await axios.post(`${API_BASE_URL}/auth/register`, {
         nome: name,
         email,
         senha: password,
       });
 
+      // Show success toast
       toast({
         title: "Cadastro bem-sucedido!",
         description: "Sua conta foi criada com sucesso.",
@@ -52,10 +59,12 @@ const Signup = () => {
         isClosable: true,
       });
 
-      navigate("/");
+      // Navigate to login page
+      navigate("/login");
     } catch (err: any) {
-      // Set error message from response or default
-      setError(err.response?.data || "Erro desconhecido.");
+      // Display error message from server response or generic message
+      const errorMessage = err.response?.data?.message || "Erro ao cadastrar. Tente novamente.";
+      setError(errorMessage);
     }
   };
 
@@ -83,7 +92,7 @@ const Signup = () => {
 
         {/* Show error alert if an error exists */}
         {error && (
-          <Alert status="error" mb={4}>
+          <Alert status="error" mb={4} borderRadius="10px">
             <AlertIcon />
             {error}
           </Alert>
@@ -91,10 +100,12 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
+            {/* Name Input */}
             <Box position="relative" width="100%">
               <Input
                 type="text"
                 placeholder="Digite seu nome"
+                value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
                 bg="transparent"
@@ -115,10 +126,12 @@ const Signup = () => {
               />
             </Box>
 
+            {/* Email Input */}
             <Box position="relative" width="100%">
               <Input
                 type="email"
-                placeholder="Digite seu E-mail"
+                placeholder="Digite seu e-mail"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 bg="transparent"
@@ -139,10 +152,12 @@ const Signup = () => {
               />
             </Box>
 
+            {/* Password Input */}
             <Box position="relative" width="100%">
               <Input
                 type="password"
                 placeholder="Senha"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 bg="transparent"
@@ -163,10 +178,12 @@ const Signup = () => {
               />
             </Box>
 
+            {/* Confirm Password Input */}
             <Box position="relative" width="100%">
               <Input
                 type="password"
                 placeholder="Repita sua senha"
+                value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 bg="transparent"
@@ -187,6 +204,7 @@ const Signup = () => {
               />
             </Box>
 
+            {/* Submit Button */}
             <Button
               type="submit"
               width="full"
@@ -198,6 +216,7 @@ const Signup = () => {
               Cadastrar
             </Button>
 
+            {/* Redirect to Login */}
             <Text color="white" textAlign="center" mt={6}>
               Já tem uma conta?{" "}
               <Link

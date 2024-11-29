@@ -1,115 +1,143 @@
 import { useEffect, useState } from "react";
-import { Box, Text, Heading, VStack, Spinner, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, IconButton, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Heading,
+  VStack,
+  Spinner,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Button,
+} from "@chakra-ui/react";
 import { FaInfoCircle } from "react-icons/fa";
-import { exportToExcel, exportToCSV } from '../../pages/valuation/functions/exportUtils';
-import { ResultData, DreAnual } from '../valuation/types/types';
+import { exportToExcel, exportToCSV } from "../../pages/valuation/functions/exportUtils";
+import { ResultData, DreAnual } from "../valuation/types/types";
 
 const ResultPage = () => {
-    const [resultData, setResultData] = useState<ResultData | null>(null);
-    const [dreAnualList, setDreAnualList] = useState<DreAnual[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-  
-    useEffect(() => {
-      const financialData = localStorage.getItem("financialData");
-      if (!financialData) {
-        setError("Dados financeiros não encontrados no localStorage.");
+  const [resultData, setResultData] = useState<ResultData | null>(null);
+  const [dreAnualList, setDreAnualList] = useState<DreAnual[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    if (!API_BASE_URL) {
+      setError("A variável de ambiente VITE_API_BASE_URL não está definida.");
+      setLoading(false);
+      return;
+    }
+
+    const financialData = localStorage.getItem("financialData");
+
+    if (!financialData) {
+      setError("Dados financeiros não encontrados no localStorage.");
+      setLoading(false);
+      return;
+    }
+
+    const { taxaDesconto, anosProjecao, dreAnualRequests } = JSON.parse(financialData);
+
+    if (!dreAnualRequests || dreAnualRequests.length === 0) {
+      setError("Os dados de DRE estão vazios ou incompletos.");
+      setLoading(false);
+      return;
+    }
+
+    const fetchValuation = fetch(`${API_BASE_URL}/api/dre/valuation`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ dreAnualRequests, taxaDesconto, anosProjecao }),
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Erro na API de Valuation: ${response.statusText}`);
+      return response.json();
+    });
+
+    const fetchDre = fetch(`${API_BASE_URL}/api/dre/calcular`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ dreAnualRequests }),
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Erro na API de DRE: ${response.statusText}`);
+      return response.json();
+    });
+
+    Promise.all([fetchValuation, fetchDre])
+      .then(([valuationData, dreData]) => {
+        setResultData(valuationData);
+        setDreAnualList(dreData.dreAnualList || []);
         setLoading(false);
-        return;
-      }
-  
-      const { taxaDesconto, anosProjecao, dreAnualRequests } = JSON.parse(financialData);
-  
-      if (!dreAnualRequests || dreAnualRequests.length === 0) {
-        setError("Os dados de DRE estão vazios ou incompletos.");
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar dados:", err);
+        setError(`Erro ao buscar dados: ${err.message}`);
         setLoading(false);
-        return;
-      }
-  
-      const fetchValuation = fetch("http://localhost:8080/api/dre/valuation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ dreAnualRequests, taxaDesconto, anosProjecao }),
-      }).then((response) => {
-        if (!response.ok) throw new Error(`Erro na API de Valuation: ${response.statusText}`);
-        return response.json();
       });
-  
-      const fetchDre = fetch("http://localhost:8080/api/dre/calcular", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ dreAnualRequests }),
-      }).then((response) => {
-        if (!response.ok) throw new Error(`Erro na API de DRE: ${response.statusText}`);
-        return response.json();
-      });
-  
-      Promise.all([fetchValuation, fetchDre])
-        .then(([valuationData, dreData]) => {
-          setResultData(valuationData);
-          setDreAnualList(dreData.dreAnualList || []);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error("Erro ao buscar dados:", err);
-          setError(`Erro ao buscar dados: ${err.message}`);
-          setLoading(false);
-        });
-    }, []);
-      
-  
-    if (loading) {
-      return (
-        <Box
-          minHeight="100vh"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          bg="gray.50"
-          p={4}
-        >
-          <Spinner size="xl" />
-          <Text mt={4}>Carregando...</Text>
-        </Box>
-      );
-    }
-  
-    if (error) {
-      return (
-        <Box
-          minHeight="100vh"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          bg="gray.50"
-          p={4}
-        >
-          <Text>{error}</Text>
-        </Box>
-      );
-    }
-  
-    if (!resultData) {
-      return (
-        <Box
-          minHeight="100vh"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          bg="gray.50"
-          p={4}
-        >
-          <Text>Os dados de valuation não foram encontrados.</Text>
-        </Box>
-      );
-    }
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        minHeight="100vh"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        bg="gray.50"
+        p={4}
+      >
+        <Spinner size="xl" />
+        <Text mt={4}>Carregando...</Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        minHeight="100vh"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        bg="gray.50"
+        p={4}
+      >
+        <Text>{error}</Text>
+      </Box>
+    );
+  }
+
+  if (!resultData) {
+    return (
+      <Box
+        minHeight="100vh"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        bg="gray.50"
+        p={4}
+      >
+        <T>Os dados de valuation não foram encontrados.Ou o servidor está fora do ar. Verifique na pagina de login se o servidor está online.</T>
+      </Box>
+    );
+  }
   return (
     <Box
       minHeight="100vh"
