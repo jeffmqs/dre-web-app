@@ -136,7 +136,7 @@ const ReceitaForm: React.FC<ReceitaFormProps> = ({ ano, onAddReceita }) => {
                 onChange={(valueString) => onChange(valueString)}
                 {...numberProps}
               >
-                <NumberInputField placeholder={placeholder} bg="white" size="lg" />
+                <NumberInputField placeholder={placeholder} bg="white" />
               </NumberInput>
             ) : (
               <Input

@@ -1,6 +1,6 @@
 // src/pages/CadServico.tsx
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     Button,
@@ -331,7 +331,7 @@ const CadServico = () => {
                                 value={novoAno}
                                 onChange={(valueString) => setNovoAno(valueString)}
                             >
-                                <NumberInputField placeholder="Ano (e.g., 2021)" bg="white" size="lg" />
+                                <NumberInputField placeholder="Ano (e.g., 2021)" bg="white"/>
                             </NumberInput>
                         </FormControl>
 
@@ -362,7 +362,7 @@ const CadServico = () => {
                                 value={cmv}
                                 onChange={(valueString) => setCmv(valueString)}
                             >
-                                <NumberInputField placeholder="Custo das Mercadorias Vendidas" bg="white" size="lg" />
+                                <NumberInputField placeholder="Custo das Mercadorias Vendidas" bg="white"  />
                             </NumberInput>
                         </FormControl>
 
@@ -393,7 +393,7 @@ const CadServico = () => {
                                 value={depreciacao}
                                 onChange={(valueString) => setDepreciacao(valueString)}
                             >
-                                <NumberInputField placeholder="Depreciação" bg="white" size="lg" />
+                                <NumberInputField placeholder="Depreciação" bg="white" />
                             </NumberInput>
                         </FormControl>
 
@@ -426,7 +426,7 @@ const CadServico = () => {
                                 value={taxaImposto}
                                 onChange={(valueString) => setTaxaImposto(valueString)}
                             >
-                                <NumberInputField placeholder="Taxa de Imposto" bg="white" size="lg" />
+                                <NumberInputField placeholder="Taxa de Imposto" bg="white" />
                             </NumberInput>
                         </FormControl>
 
@@ -476,7 +476,7 @@ const CadServico = () => {
                         </Text>
                     ) : (
                         <Accordion allowMultiple>
-                            {dreAnualRequests.map((dre, index) => (
+                            {dreAnualRequests.map((dre) => (
                                 <AccordionItem key={dre.ano} border="1px solid" borderColor="gray.200" borderRadius="md" mb={4}>
                                     <h2>
                                         <AccordionButton>

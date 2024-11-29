@@ -12,10 +12,10 @@ import { useState } from "react";
 const MenuPage = () => {
     const navigate = useNavigate();
     const [value, setValue] = useState(""); // Controla o valor selecionado
-    const [expandedIndex, setExpandedIndex] = useState(null); // Controla o estado do Accordion
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // Controla o estado do Accordion
 
     // Função para limpar o valor selecionado ao mudar de accordion
-    const handleAccordionChange = (index) => {
+    const handleAccordionChange = (index: number) => {
         if (index !== expandedIndex) {
             setValue(""); // Limpa o valor selecionado ao mudar de seção
         }

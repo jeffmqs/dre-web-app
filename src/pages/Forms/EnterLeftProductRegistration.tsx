@@ -5,7 +5,7 @@ import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
 import { Popover, PopoverTrigger, PopoverContent, PopoverBody, Grid, GridItem } from "@chakra-ui/react";
-import { useDayzed, DateObj } from "dayzed";
+import { useDayzed } from "dayzed";
 import { format } from "date-fns";
 
 // Menu de itens (produtos ou serviços)
@@ -109,7 +109,7 @@ const MenuPage = () => {
                 </Button>
               </HStack>
             </GridItem>
-            {calendar.weeks.map((week, weekIndex) =>
+            {calendar.weeks.map((week) =>
               week.map((dateObj, dateIndex) => {
                 if (typeof dateObj === "string") {
                   return <GridItem key={dateIndex} />;

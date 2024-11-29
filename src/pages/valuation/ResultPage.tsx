@@ -134,7 +134,7 @@ const ResultPage = () => {
         bg="gray.50"
         p={4}
       >
-        <T>Os dados de valuation não foram encontrados.Ou o servidor está fora do ar. Verifique na pagina de login se o servidor está online.</T>
+        <Text>Os dados de valuation não foram encontrados.Ou o servidor está fora do ar. Verifique na pagina de login se o servidor está online.</Text>
       </Box>
     );
   }

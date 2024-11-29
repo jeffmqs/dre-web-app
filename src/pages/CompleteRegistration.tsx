@@ -1,22 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
   Input,
   Heading,
-  Icon,
   VStack,
-  Text,
 } from "@chakra-ui/react";
-import { FaUser, FaLock } from "react-icons/fa"; 
 
 const CompleteRegistration: React.FC = () => {
-  const location = useLocation();
-  const [birthdate, setBirthdate] = useState<string>("");
+ 
   const [cpf, setCpf] = useState<string>("");
   const [cnpj, setCnpj] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -59,7 +54,7 @@ const CompleteRegistration: React.FC = () => {
             <Box position="relative" width="100%">
               <Input
                 type="date"
-                onChange={(e) => setBirthdate(e.target.value)}
+                
                 required
                 color="white"
                 bg="transparent"
@@ -102,7 +97,6 @@ const CompleteRegistration: React.FC = () => {
               <Input
                 type="text"
                 placeholder="Informe seu endereço"
-                onChange={(e) => setAddress(e.target.value)}
                 required
                 color="white"
                 bg="transparent"
